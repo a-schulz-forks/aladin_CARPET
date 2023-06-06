@@ -9,7 +9,7 @@ import { graphviz } from "d3-graphviz";
 export default {
   props: {
     componentID: Number,
-    storeObject: Object,
+    storeObject: Object
   },
   setup(props) {
     const { store, getProperty } = props.storeObject;
@@ -24,10 +24,11 @@ export default {
     });
 
     const renderGraph = (description) => {
+      console.log();
       graphviz(`#graph_${props.componentID}`, {
         fit: true,
         zoom: false,
-        useWorker: false,
+        useWorker: false
       }).renderDot(description);
     };
     watch(dotDescription, () => {
@@ -37,7 +38,7 @@ export default {
       renderGraph(dotDescription.value);
     });
     return {};
-  },
+  }
 };
 </script>
 

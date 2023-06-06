@@ -1,7 +1,6 @@
 <template>
   <div class="parameter_range">
     <input
-      v-tooltip.top-center="lowerErrorMessage"
       :class="`${elementId}__initial__lowerValue`"
       :type="element.type"
       :value="element.initial.lowerValue"
@@ -12,7 +11,6 @@
       @keyup="emitEvent"
     />
     <input
-      v-tooltip.top-center="upperErrorMessage"
       :class="`${elementId}__initial__upperValue`"
       :type="element.type"
       :value="element.initial.upperValue"
@@ -26,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 import { delay } from "@/helpers/HelperFunctions.ts";
 import { evaluateRange } from "./validation";
 
@@ -34,12 +32,9 @@ export default {
   name: "RangeFormField",
   props: {
     element: Object,
-    elementId: String,
+    elementId: String
   },
   setup(props, { emit }) {
-    let lowerErrorMessage = ref("");
-    let upperErrorMessage = ref("");
-
     const evaluate = () => {
       const lowerInput: HTMLInputElement = document.querySelector(`.${props.elementId}__initial__lowerValue`);
       const upperInput: HTMLInputElement = document.querySelector(`.${props.elementId}__initial__upperValue`);
@@ -80,7 +75,7 @@ export default {
     });
 
     return { emitEvent };
-  },
+  }
 };
 </script>
 

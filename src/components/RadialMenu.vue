@@ -13,7 +13,7 @@
 <script lang="ts">
 import { useRouter } from "vue-router";
 import stores from "@/helpers/TaskGraphUtility";
-require("clickout-event");
+import "clickout-event";
 
 export default {
   setup() {
@@ -22,26 +22,28 @@ export default {
     const router = useRouter();
     let isMenuOpen = false;
 
-    const openCloseHandler = (event) => {
-      const menuBubble = event.currentTarget;
+    const openCloseHandler = (event: Event) => {
+      const menuBubble = <HTMLElement>event.currentTarget;
+      const parentNode = <HTMLElement>menuBubble.parentNode;
+
       if (isMenuOpen === false) {
-        menuBubble.parentNode.classList.remove("closed");
-        menuBubble.parentNode.classList.add("open");
-        menuBubble.querySelector("p").innerHTML = "&#10005;";
+        parentNode.classList.remove("closed");
+        parentNode.classList.add("open");
+        (<HTMLElement>menuBubble.querySelector("p")).innerHTML = "&#10005;";
       } else {
-        menuBubble.parentNode.classList.remove("open");
-        menuBubble.parentNode.classList.add("closed");
-        menuBubble.querySelector("p").innerHTML = "&#9776;";
+        parentNode.classList.remove("open");
+        parentNode.classList.add("closed");
+        (<HTMLElement>menuBubble.querySelector("p")).innerHTML = "&#9776;";
       }
 
       isMenuOpen = !isMenuOpen;
     };
 
     const closeHandler = () => {
-      const menuBubble = document.querySelector(".menu");
+      const menuBubble = <HTMLElement>document.querySelector(".menu");
       menuBubble.classList.add("closed");
       menuBubble.classList.remove("open");
-      menuBubble.querySelector("p").innerHTML = "&#9776;";
+      (<HTMLElement>menuBubble.querySelector("p")).innerHTML = "&#9776;";
       isMenuOpen = false;
     };
 
@@ -52,7 +54,7 @@ export default {
         class: "home",
         handler: () => {
           router.push({ name: "TaskOverview" });
-        },
+        }
       },
       {
         label: "Settings",
@@ -60,7 +62,7 @@ export default {
         class: "settings",
         handler: () => {
           router.push({ name: "Settings" });
-        },
+        }
       },
       {
         label: "Statistic",
@@ -68,7 +70,7 @@ export default {
         class: "statistics",
         handler: () => {
           router.push({ name: "Statistic" });
-        },
+        }
       },
       {
         label: "Save replay",
@@ -76,12 +78,12 @@ export default {
         class: "replay",
         handler: () => {
           store.dispatch("storeReplay");
-        },
-      },
+        }
+      }
     ];
 
     return { openCloseHandler, options, closeHandler };
-  },
+  }
 };
 </script>
 

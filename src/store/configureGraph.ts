@@ -15,23 +15,26 @@ const state: IState = {
     "0": {
       zoomScale: 1,
       interjections: [
-        { method: "matrixSelfMultiplication", dependencies: { baseMatrix: "nodes__0__components__1", n: "taskData__longestPath" } },
+        {
+          method: "matrixSelfMultiplication",
+          dependencies: { baseMatrix: "nodes__0__components__1", n: "taskData__longestPath" }
+        }
       ],
       layouts: {
         sm: [],
         md: [],
         lg: [
           { x: 32, y: 30, w: 2, h: 2, i: 0, static: false },
-          { x: 34, y: 30, w: 2, h: 2, i: 1, static: false },
-        ],
+          { x: 34, y: 30, w: 2, h: 2, i: 1, static: false }
+        ]
       },
       hints: {
         active: false,
         current: 0,
         descriptions: [
           "Bestimme anhand der Parameter die Komplexität des zu generierenden Gozintographen.",
-          'Viel Erfolg! <br><br> <img width="100px;" height="100px"; src="https://images.emojiterra.com/twitter/512px/1f340.png" />',
-        ],
+          'Viel Erfolg! <br><br> <img width="100px;" height="100px"; src="https://images.emojiterra.com/twitter/512px/1f340.png" />'
+        ]
       },
       components: {
         "0": {
@@ -44,19 +47,19 @@ const state: IState = {
             initialize: {
               validation: {
                 operations: [],
-                paths: ["taskData__adjacencyMatrix"],
+                paths: ["taskData__adjacencyMatrix"]
               },
               user: {
                 operations: [{ name: "getValueInitializedMatrix", args: [null] }],
-                paths: ["taskData__adjacencyMatrix"],
-              },
+                paths: ["taskData__adjacencyMatrix"]
+              }
             },
             userData: null,
             validationData: null,
             readOnly: false,
             rowLabel: "taskData__labelVector",
-            columnLabel: "taskData__labelVector",
-          },
+            columnLabel: "taskData__labelVector"
+          }
         },
         "1": {
           type: "TaskConfiguration",
@@ -69,8 +72,8 @@ const state: IState = {
                 instruction: "generateGraph",
                 type: "fetchData",
                 label: "Generieren!",
-                dependsOn: ["nodeAmount", "edgeWeightRange", "nodeValueRange", "edgeDensity"],
-              },
+                dependsOn: ["nodeAmount", "edgeWeightRange", "nodeValueRange", "edgeDensity"]
+              }
             ],
             form: {
               nodeAmount: {
@@ -85,8 +88,8 @@ const state: IState = {
                 presets: {
                   easy: 5,
                   medium: 10,
-                  hard: 20,
-                },
+                  hard: 20
+                }
               },
               edgeWeightRange: {
                 formType: "RangeFormField",
@@ -97,13 +100,13 @@ const state: IState = {
                 step: 1,
                 initial: {
                   lowerValue: 1,
-                  upperValue: 10,
+                  upperValue: 10
                 },
                 presets: {
                   easy: [2, 10],
                   medium: 3,
-                  hard: 5,
-                },
+                  hard: 5
+                }
               },
               nodeValueRange: {
                 formType: "RangeFormField",
@@ -114,13 +117,13 @@ const state: IState = {
                 step: 1,
                 initial: {
                   lowerValue: 1,
-                  upperValue: 10,
+                  upperValue: 10
                 },
                 presets: {
                   easy: 2,
                   medium: 3,
-                  hard: 5,
-                },
+                  hard: 5
+                }
               },
               edgeDensity: {
                 formType: "ValueFormField",
@@ -134,8 +137,8 @@ const state: IState = {
                 presets: {
                   easy: 0.2,
                   medium: 0.3,
-                  hard: 0.5,
-                },
+                  hard: 0.5
+                }
               },
               seed: {
                 formType: "ValueFormField",
@@ -147,14 +150,14 @@ const state: IState = {
                 presets: {
                   easy: "",
                   medium: "",
-                  hard: "",
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+                  hard: ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   taskData: {
     labelVector: ["K0", "K1", "R0", "R1", "P0", "B0", "B1", "P1"],
@@ -166,9 +169,9 @@ const state: IState = {
       ["0", "0", "5", "8", "0", "0", "0", "0"],
       ["0", "3", "0", "0", "0", "0", "0", "0"],
       ["4", "5", "0", "0", "0", "10", "0", "0"],
-      ["0", "0", "0", "9", "0", "0", "14", "0"],
-    ],
-  },
+      ["0", "0", "0", "9", "0", "0", "14", "0"]
+    ]
+  }
 };
 
 const mutations = {
@@ -181,7 +184,7 @@ const mutations = {
       if (depth === splitPath.length - 1) subState[splitPath[depth]] = value;
       else subState = subState[splitPath[depth]];
     }
-  },
+  }
 };
 const actions = {
   fetchTaskData: async ({ commit }, payloadObject: { [key: string]: any }) => {
@@ -205,7 +208,7 @@ const actions = {
   },
   setPropertyFromPath: async ({ commit }, payload: { path: string; value: any }) => {
     commit("SET_PROPERTY", payload);
-  },
+  }
 };
 const getters = {
   getPropertyFromPath: (state: IState) => (path: string) => {
@@ -214,7 +217,7 @@ const getters = {
       if (value && Object.keys(value).includes(key)) return value[key];
       else return null;
     }, state);
-  },
+  }
 };
 
 export const configurationStore = createStore<IState>({
@@ -222,5 +225,5 @@ export const configurationStore = createStore<IState>({
   mutations,
   actions,
   getters,
-  plugins: [createLogger()],
+  plugins: [createLogger()]
 });

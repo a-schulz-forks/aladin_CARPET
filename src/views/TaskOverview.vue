@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { computed, onMounted, onBeforeMount, watch } from "vue";
-import { store as taskOverviewStore } from "../store/taskOverview";
+import { store as taskOverviewStore } from "@/store/taskOverview";
 import stores from "@/helpers/TaskGraphUtility";
 
 export default {
@@ -76,7 +76,7 @@ export default {
     });
 
     return { taskList };
-  },
+  }
 };
 </script>
 

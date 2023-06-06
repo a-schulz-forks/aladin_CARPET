@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { ref } from "vue";
-require("clickout-event");
+import "clickout-event";
 
 export default {
   name: "ContextMenu",
@@ -31,7 +31,7 @@ export default {
     };
 
     return { componentMethods: props.methods, id: props.componentId, openContextMenu, closeContextMenu };
-  },
+  }
 };
 </script>
 

@@ -10,7 +10,7 @@ export default {
   components: { RadialMenu },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 
@@ -28,6 +28,7 @@ input::-webkit-inner-spin-button {
 
 /* Firefox */
 input[type="number"] {
+  appearance: textfield;
   -moz-appearance: textfield;
 }
 

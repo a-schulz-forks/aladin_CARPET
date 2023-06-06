@@ -103,10 +103,10 @@ export default {
     Modal,
     PlanGraph,
     EditableGraph,
-    GanttDiagram,
+    GanttDiagram
   },
   props: {
-    storeObject: Object,
+    storeObject: Object
   },
   setup(props) {
     const { getProperty, setProperty, store } = props.storeObject;
@@ -133,7 +133,9 @@ export default {
     });
 
     // setup callbacks for grid functionalities (zoom, pan, drag, resize)
-    const fixQuadraticItems = (ids: Array<number> = currentLayout.value.filter((item) => item.w === item.h).map((item) => item.i)) => {
+    const fixQuadraticItems = (
+      ids: Array<number> = currentLayout.value.filter((item) => item.w === item.h).map((item) => item.i)
+    ) => {
       if (!document.querySelector(".contourPlot")) return;
       setTimeout(() => {
         ids.forEach((id) => {
@@ -145,13 +147,13 @@ export default {
 
     let panzoomInstance = null;
     onMounted(() => {
-      panzoomInstance = panzoom(document.querySelector(".zoomWrapper"), {
+      panzoomInstance = panzoom(<HTMLElement>document.querySelector(".zoomWrapper"), {
         excludeClass: "vue-grid-item",
         canvas: true,
         contain: "outside",
-        startX: -document.querySelector(".zoomWrapper").clientWidth / 2,
-        startY: -document.querySelector(".zoomWrapper").clientHeight / 2,
-        silent: false,
+        startX: -(<HTMLElement>document.querySelector(".zoomWrapper")).clientWidth / 2,
+        startY: -(<HTMLElement>document.querySelector(".zoomWrapper")).clientHeight / 2,
+        silent: false
       });
       window.panzoom = panzoomInstance;
 
@@ -220,9 +222,9 @@ export default {
       rowHeight,
       setCoordinates,
       layoutSize,
-      modals,
+      modals
     };
-  },
+  }
 };
 </script>
 
