@@ -24,7 +24,9 @@ export default {
     const currentNode = store.state.currentNode;
 
     const hints = computed(() => {
-      const hints: { active: boolean; current: number; descriptions: Array<string> } = getProperty(`nodes__${currentNode}__hints`);
+      const hints: { active: boolean; current: number; descriptions: Array<string> } = getProperty(
+        `nodes__${currentNode}__hints`
+      );
       if (!hints) return { active: false, current: 0, descriptions: [] };
       return hints;
     });
@@ -38,12 +40,12 @@ export default {
         lightBulb.classList.remove("on");
         lightBulbSource.value = "/img/lightbulb.png";
         textBox.classList.add("closed");
-        setProperty({ path: `nodes__${currentNode}__hints__active`, value: hints.value.active });
+        setProperty({ path: `nodes__${currentNode}__hints__active`, value: false });
       } else {
         lightBulb.classList.add("on");
         lightBulbSource.value = "/img/lightbulb_on.png";
         textBox.classList.remove("closed");
-        setProperty({ path: `nodes__${currentNode}__hints__active`, value: hints.value.active });
+        setProperty({ path: `nodes__${currentNode}__hints__active`, value: true });
       }
     };
 
@@ -68,6 +70,7 @@ export default {
       document.querySelector(".lightBulb.on").classList.remove("on");
       document.querySelector(".hintText").classList.add("closed");
       lightBulbSource.value = "/img/lightbulb.png";
+      setProperty({ path: `nodes__${currentNode}__hints__active`, value: false });
     };
 
     return {
@@ -75,9 +78,9 @@ export default {
       lightBulbSource,
       lightSwitch,
       hintHandler,
-      closeHandler,
+      closeHandler
     };
-  },
+  }
 };
 </script>
 

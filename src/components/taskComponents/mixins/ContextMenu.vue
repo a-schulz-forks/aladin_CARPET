@@ -3,34 +3,52 @@
     <div class="contextMenuClickable" @click.prevent="openContextMenu">...</div>
     <slot></slot>
     <div :class="`contextMenu contextMenu_${id}`">
-      <div v-for="(method, name) in componentMethods" :key="name" @click="method">{{ name }}</div>
+      <div v-for="(method, name) in componentMethods" :key="name" @click="methodWrapper(method)">{{ name }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
 import "clickout-event";
 
 export default {
   name: "ContextMenu",
   props: { componentId: Number, methods: Object, storeObject: Object },
   setup(props) {
-    const { getProperty } = props.storeObject;
+    const { getProperty, setProperty } = props.storeObject;
     const currentNode = getProperty("currentNode");
 
     const closeContextMenu = () => {
       const contextMenu = document.querySelector(".contextMenu.open");
       if (contextMenu) contextMenu.classList.remove("open");
+      setProperty({
+        path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__isOpen`,
+        value: false
+      });
     };
-    const openContextMenu = (event) => {
+    const openContextMenu = () => {
       // const parent = event.path.filter((n) => /vue-grid-item/.test(n.className))[0];
-      const contextMenu: HTMLElement = document.querySelector(`.contextMenu_${props.componentId}`);
+      const contextMenu: HTMLElement = <HTMLElement>document.querySelector(`.contextMenu_${props.componentId}`);
       if (Array.from(contextMenu.classList).includes("open")) contextMenu.classList.remove("open");
       else contextMenu.classList.add("open");
+      setProperty({
+        path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__isOpen`,
+        value: true
+      });
     };
 
-    return { componentMethods: props.methods, id: props.componentId, openContextMenu, closeContextMenu };
+    const methodWrapper = (method: Function) => {
+      const usedMethods = getProperty(`nodes__${currentNode}__components__${props.componentId}__contextMenu__usedMethods`);
+      console.log(usedMethods);
+      setProperty({
+        path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__usedMethods`,
+        value: [...usedMethods, method.name]
+      });
+
+      method();
+    };
+
+    return { componentMethods: props.methods, id: props.componentId, openContextMenu, closeContextMenu, methodWrapper };
   }
 };
 </script>

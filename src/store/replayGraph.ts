@@ -12,12 +12,12 @@ const emptyState = {
   topology: [],
   edges: {},
   nodes: {},
-  taskData: {},
+  taskData: {}
 };
 
 const state: IState = {
   ...emptyState,
-  taskReplay: { steps: [], meta: [] },
+  taskReplay: { steps: [], meta: [] }
 };
 const mutations = {
   async SET_PROPERTY(state: IState, payload: { path: string; value: any }) {
@@ -29,7 +29,7 @@ const mutations = {
       if (depth === splitPath.length - 1) subState[splitPath[depth]] = value;
       else subState = subState[splitPath[depth]];
     }
-  },
+  }
 };
 const actions = {
   fetchReplayGraph: async ({ commit }, payload: { id: string }) => {
@@ -48,7 +48,7 @@ const actions = {
   },
   setPropertyFromPath: async ({ commit }, payload: { path: string; value: any }) => {
     commit("SET_PROPERTY", payload);
-  },
+  }
 };
 const getters = {
   getPropertyFromPath: (state: IState) => (path: string) => {
@@ -57,7 +57,7 @@ const getters = {
       if (value && Object.keys(value).includes(key)) return value[key];
       else return null;
     }, state);
-  },
+  }
 };
 
 export const replayStore = createStore<IState>({
@@ -65,5 +65,5 @@ export const replayStore = createStore<IState>({
   mutations,
   actions,
   getters,
-  plugins: [createLogger()],
+  plugins: [createLogger()]
 });

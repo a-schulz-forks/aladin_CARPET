@@ -14,7 +14,7 @@ const baseState: IState = {
   nodes: {},
   taskData: {},
   taskReplay: { steps: [], mouse: [], panning: [], zooming: [], meta: {} },
-  restoredFromReplay: false,
+  restoredFromReplay: false
 };
 
 const extractMetaInformation = (state: IState, replay: IReplay) => {
@@ -85,7 +85,7 @@ const mutations = {
   },
   RESTORED_FROM_REPLAY(state: IState) {
     state.restoredFromReplay = true;
-  },
+  }
 };
 const actions = {
   trackMouse: async ({ commit }, payload) => {
@@ -138,7 +138,7 @@ const actions = {
   },
   setPropertyFromPath: async ({ commit }, payload: { path: string; value: any }) => {
     commit("SET_PROPERTY", payload);
-  },
+  }
 };
 const getters = {
   getPropertyFromPath: (state: IState) => (path: string) => {
@@ -147,13 +147,13 @@ const getters = {
       if (value && Object.keys(value).includes(key)) return value[key];
       else return null;
     }, state);
-  },
+  }
 };
 
 export const taskStore = createStore<IState>({
   state,
   mutations,
   actions,
-  getters,
+  getters
   // plugins: [createLogger()],
 });

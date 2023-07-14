@@ -1,6 +1,6 @@
 <template>
   <nav class="navigation">
-    <div class="traverse backward" data-direction="backward" :data-to="previous" @click="navigate">
+    <div class="traverse backward" v-if="!isRootNote" data-direction="backward" :data-to="previous" @click="navigate">
       <div class="validity">&#10004;</div>
       <p>&#9658;</p>
     </div>
@@ -17,7 +17,7 @@ import { useRouter } from "vue-router";
 
 export default {
   props: {
-    storeObject: Object,
+    storeObject: Object
   },
   setup(props) {
     const { getProperty, setProperty } = props.storeObject;
@@ -29,7 +29,11 @@ export default {
       if (edges) return edges[0];
       return null;
     });
-    const previous = computed(() => getProperty("previousNode"));
+    const previous = computed(() => {
+      return getProperty("previousNode");
+    });
+
+    const isRootNote = rootNode == currentNode.value;
 
     const findPrevious = (to: number) => {
       const edges: { [id: number]: Array<number> } = getProperty("edges");
@@ -88,8 +92,8 @@ export default {
       }
     };
 
-    return { navigate, next, previous };
-  },
+    return { navigate, next, previous, isRootNote };
+  }
 };
 </script>
 
