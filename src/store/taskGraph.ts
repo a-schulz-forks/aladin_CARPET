@@ -127,6 +127,7 @@ const actions = {
     // await dispatch("fetchTaskGraph");
     const { endpoint, payload } = payloadObject;
     // TODO extract language to seperate user module
+    // TODO: save payload in store to calculate difficulty
     const result = await axios.post(`/api/${endpoint}`, { ...payload, language: "de" });
     Object.entries(JSON.parse(result.data)).forEach(([key, value]) => {
       commit("SET_PROPERTY", { path: `taskData__${key}`, value: value });
@@ -153,6 +154,7 @@ const actions = {
   },
   setPropertyFromPath: async ({ commit }, payload: { path: string; value: any }) => {
     commit("SET_PROPERTY", payload);
+  //   create component and here set variable so it is shown with its logic
   }
 };
 const getters = {

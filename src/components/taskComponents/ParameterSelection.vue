@@ -109,6 +109,7 @@ export default {
       payload.type = currentTask.value;
       payload.task = currentTask.value;
       payload.instruction = instruction;
+      console.log(payload)
       return payload;
     };
 

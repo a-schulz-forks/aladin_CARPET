@@ -38,6 +38,7 @@ export default {
     const barSize = window.innerWidth * 0.6 * 0.95;
     const barOffset = window.innerWidth * 0.215;
 
+    //
     const calcDuration = (replayGraph) => {
       const times = { start: new Date().getTime(), duration: 0, end: 0 };
       Object.values(replayGraph).forEach((events: Array<any>) => {
