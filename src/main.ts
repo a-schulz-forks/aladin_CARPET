@@ -5,6 +5,7 @@ import store from "./store";
 import "./registerServiceWorker";
 import VTooltip from "v-tooltip";
 import {createPinia} from 'pinia'
+import './scss/styles.scss'
 
 const pinia = createPinia()
 createApp(App).use(store).use(router).use(VTooltip).use(pinia).mount("#app");

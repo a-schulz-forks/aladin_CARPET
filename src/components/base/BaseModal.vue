@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { defineProps, ref, onMounted, watch } from "vue";
+import {defineProps, onMounted, ref, watch} from "vue";
+import * as bootstrap from 'bootstrap'
 
 const props = defineProps({
   title: {
@@ -26,7 +27,8 @@ const props = defineProps({
   },
   rightButtonCallback: {
     type: Function,
-    default: () => {}
+    default: () => {
+    }
   }
 });
 
