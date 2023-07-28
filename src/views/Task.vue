@@ -1,78 +1,77 @@
 <template>
-<!--  look here -->
   <div class="task">
     <transition name="fade">
-      <LoadingSpinner v-if="isLoading" />
+      <LoadingSpinner v-if="isLoading"/>
     </transition>
     <transition name="slidedown">
-      <DecisionNode v-if="isDecisionNode" :storeObject="taskStore" :key="currentNode" />
+      <DecisionNode v-if="isDecisionNode" :key="currentNode" :storeObject="taskStore"/>
     </transition>
-    <Canvas v-if="!isDecisionNode && !isLoading" :key="currentNode" :storeObject="taskStore" />
+    <BaseModal :left-button-callback=" () => gamifyStore.addIgnoredPath(checkPaths[0])"
+               :right-button-callback="() => gamifyStore.addSavedPath(checkPaths[0])"
+               :visibility="checkPaths.length > 0" left-button-label="Ignorieren" right-button-label="Speichern"
+               title="Ist dieser Pfad nützlich für die Auswertung?">
+      {{ checkPaths[0] }}
+    </BaseModal>
+    <Canvas v-if="!isDecisionNode && !isLoading" :key="currentNode" :storeObject="taskStore"/>
   </div>
 </template>
 
-<script lang="ts">
-import { onMounted, onBeforeUnmount, computed } from "vue";
-import { useRoute } from "vue-router";
+<script lang="ts" setup>
+import {computed, onBeforeUnmount, onMounted} from "vue";
+import {useRoute} from "vue-router";
 import Canvas from "@/components/Canvas.vue";
 import stores from "@/helpers/TaskGraphUtility";
 import DecisionNode from "@/components/DecisionNode.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import BaseModal from "@/components/base/BaseModal.vue";
+import {useGamifyStore} from '@/stores/gamify'
 
-export default {
-  name: "Task",
-  components: {
-    Canvas,
-    DecisionNode,
-    LoadingSpinner,
-  },
-  setup() {
-    const taskStore = stores.taskStore;
-    const { store, getProperty, setProperty } = taskStore;
+const taskStore = stores.taskStore;
+const {store, getProperty, setProperty} = taskStore;
 
-    const route = useRoute();
-    const currentNode = computed(() => getProperty("currentNode"));
+const route = useRoute();
+const currentNode = computed(() => getProperty("currentNode"));
 
-    const isDecisionNode = computed(() => {
-      const edges = getProperty(`edges__${currentNode.value}`);
-      if (edges) return edges.length > 1;
-      return false;
-    });
+const isDecisionNode = computed(() => {
+  const edges = getProperty(`edges__${currentNode.value}`);
+  if (edges) return edges.length > 1;
+  return false;
+});
 
-    const isLoading = computed(() => getProperty(`isLoading`));
+const isLoading = computed(() => getProperty(`isLoading`));
 
-    const isReplayGraph = computed(() => getProperty("restoredFromReplay"));
+const gamifyStore = useGamifyStore();
+const checkPaths = computed(() => gamifyStore.checkPaths);
 
-    if (typeof route.params.task === "string" && !isReplayGraph.value) {
-      setProperty({ path: "currentTask", value: route.params.task });
-      store.dispatch("fetchTaskGraph", { task: route.params.task });
-    }
+const isReplayGraph = computed(() => getProperty("restoredFromReplay"));
 
-    const throttle = 50;
-    let last = new Date().getTime();
-    const trackMouse = (event) => {
-      event.preventDefault();
-      const now = new Date().getTime();
-      const target: EventTarget = event.target;
+if (typeof route.params.task === "string" && !isReplayGraph.value) {
+  setProperty({path: "currentTask", value: route.params.task});
+  store.dispatch("fetchTaskGraph", {task: route.params.task});
+}
 
-      // update only n milliseconds to not freeze the app
-      if (now - last < throttle) return;
+const throttle = 50;
+let last = new Date().getTime();
+const trackMouse = (event: MouseEvent) => {
+  event.preventDefault();
+  const now = new Date().getTime();
+  const target: EventTarget = event.target;
 
-      store.dispatch("trackMouse", { x: event.pageX, y: event.pageY, timestamp: now });
+  // update only n milliseconds to not freeze the app
+  if (now - last < throttle) return;
 
-      last = now;
-    };
-    onMounted(() => {
-      document.addEventListener("mousemove", trackMouse);
-    });
+  store.dispatch("trackMouse", {x: event.pageX, y: event.pageY, timestamp: now});
 
-    onBeforeUnmount(() => {
-      document.removeEventListener("mousemove", trackMouse);
-    });
-
-    return { currentNode, isDecisionNode, taskStore, isLoading };
-  },
+  last = now;
 };
+onMounted(() => {
+  document.addEventListener("mousemove", trackMouse);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("mousemove", trackMouse);
+});
+
 </script>
 
 <style scoped>
