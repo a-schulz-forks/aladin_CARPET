@@ -78,8 +78,13 @@ interface IComponents {
   [key: number]: IMatrixComponent | IDOTGraphComponent | ITaskConfigurationComponent | IComponent | object;
 }
 
+export interface ISteps {
+  "timestamp": number,
+  "path": string,
+  "value": string
+}
 export interface IReplay {
-  steps: Array<any>;
+  steps: Array<ISteps>;
   mouse?: Array<any>;
   panning?: Array<any>;
   zooming?: Array<any>;
