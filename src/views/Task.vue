@@ -31,7 +31,6 @@ const {store, getProperty, setProperty} = taskStore;
 
 const route = useRoute();
 const currentNode = computed(() => getProperty("currentNode"));
-
 const isDecisionNode = computed(() => {
   const edges = getProperty(`edges__${currentNode.value}`);
   if (edges) return edges.length > 1;

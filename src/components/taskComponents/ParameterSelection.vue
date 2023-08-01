@@ -39,7 +39,7 @@ import ActionButtons from "@/components/taskComponents/mixins/ActionButtons.vue"
 export default {
   props: {
     componentID: Number,
-    storeObject: Object
+    storeObject: Object,
   },
   components: {
     RangeFormField,
@@ -47,15 +47,10 @@ export default {
     CheckboxFormField,
     ValueFormField,
     DualSlider,
-    ActionButtons
+    ActionButtons,
   },
   setup(props) {
-    const { store, getProperty, setProperty } = props.storeObject as {
-      store: any;
-      getProperty: Function;
-      setProperty: Function;
-    };
-
+    const { store, getProperty, setProperty } = props.storeObject;
     const currentNode = store.state.currentNode;
     const path = `nodes__${currentNode}__components__${props.componentID}`;
 
@@ -72,8 +67,8 @@ export default {
 
     const elements = computed(() => getProperty(`${path}__component__form`));
 
-    const updateElement = (event: Event) => {
-      const { classList, value, type, checked } = <HTMLFormElement>event.target;
+    const updateElement = (event) => {
+      const { classList, value, type, checked } = event.target;
       const className = classList[0];
       const payload = type === "checkbox" ? checked : value;
       const elementPath = `${path}__component__form__${className}`;
@@ -116,18 +111,17 @@ export default {
     const currentTask = computed(() => getProperty("currentTask"));
 
     const fetchData = (instruction) => {
-      store.dispatch("fetchTaskData", {
-        payload: preparePayload(instruction),
-        endpoint: `${currentTask.value}/${instruction}`
-      });
+      const preparedPayload = preparePayload(instruction);
+      store.dispatch("fetchTaskData", { payload: preparedPayload, endpoint: `${currentTask.value}/${instruction}` });
+      setProperty({ path: `taskParameters`, value: preparedPayload});
     };
 
     const actionTypes = {
-      fetchData
+      fetchData,
     };
 
     return { elements, updateElement, actions, actionTypes, title };
-  }
+  },
 };
 </script>
 

@@ -39,11 +39,6 @@ const routes = [
     path: "/replay/:id",
     name: "Replay",
     component: () => import(/* webpackChunkName: "replay" */ "@/views/Replay.vue")
-  },
-  {
-    path: "/test",
-    name: "Test",
-    component: () => import(/* webpackChunkName: "test" */ "@/views/ComponentTest.vue")
   }
 ];
 
