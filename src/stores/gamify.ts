@@ -5,13 +5,10 @@ const normalizePath = (path: string) => path.replaceAll(/__[0-9]/g, '')
 
 // https://pinia.vuejs.org/core-concepts/#setup-stores
 export const useGamifyStore = defineStore('gamify', () => {
+    const modalActive = ref(false);
     const checkPaths = ref([]);
     const savedPath = ref([]);
     const ignoredPaths = ref([]);
-    const getCheckPaths = computed(() => checkPaths.value);
-    const getSavedPaths = computed(() => savedPath.value);
-    const getIgnoredPaths = computed(() => ignoredPaths.value);
-
     function setCheckPath(text: string) {
         const normalizedPath = normalizePath(text)
         if (!(
@@ -35,14 +32,12 @@ export const useGamifyStore = defineStore('gamify', () => {
     }
 
     return {
+        modalActive,
         checkPaths,
         setCheckPath,
-        getCheckPaths,
         savedPath,
-        getSavedPaths,
         addSavedPath,
         ignoredPaths,
-        getIgnoredPaths,
         addIgnoredPath
     }
 })

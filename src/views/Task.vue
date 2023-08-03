@@ -8,7 +8,7 @@
     </transition>
     <BaseModal :left-button-callback=" () => gamifyStore.addIgnoredPath(checkPaths[0])"
                :right-button-callback="() => gamifyStore.addSavedPath(checkPaths[0])"
-               :visibility="checkPaths.length > 0" left-button-label="Ignorieren" right-button-label="Speichern"
+               :visibility="gamifyStore.modalActive && checkPaths.length > 0" left-button-label="Ignorieren" right-button-label="Speichern"
                title="Ist dieser Pfad nützlich für die Auswertung?">
       {{ checkPaths[0] }}
     </BaseModal>
