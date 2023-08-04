@@ -8,16 +8,17 @@
     </transition>
     <BaseModal :left-button-callback=" () => gamifyStore.addIgnoredPath(checkPaths[0])"
                :right-button-callback="() => gamifyStore.addSavedPath(checkPaths[0])"
-               :visibility="gamifyStore.modalActive && checkPaths.length > 0" left-button-label="Ignorieren" right-button-label="Speichern"
-               title="Ist dieser Pfad nützlich für die Auswertung?">
-      {{ checkPaths[0] }}
+               :visibility="gamifyStore.modalActive && checkPaths.length > 0" left-button-label="Ignorieren"
+               right-button-label="Speichern"
+               title="Festlegen der Gamification Optionen für diesen Pfad">
+      <gamification-labeller :path="checkPaths[0]" :storeObject="taskStore"/>
     </BaseModal>
     <Canvas v-if="!isDecisionNode && !isLoading" :key="currentNode" :storeObject="taskStore"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import Canvas from "@/components/Canvas.vue";
 import stores from "@/helpers/TaskGraphUtility";
@@ -25,6 +26,7 @@ import DecisionNode from "@/components/DecisionNode.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import BaseModal from "@/components/base/BaseModal.vue";
 import {useGamifyStore} from '@/stores/gamify'
+import GamificationLabeller from "@/components/GamificationLabeller.vue";
 
 const taskStore = stores.taskStore;
 const {store, getProperty, setProperty} = taskStore;

@@ -33,6 +33,15 @@ import MatrixField from "@/components/taskComponents/math/LinearAlgebra/MatrixFi
 import type { IMatrixComponent, IMatrixInstruction } from "@/interfaces/componentInterfaces/MatrixInterface";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 
+/**
+ * multiply the score for this component with these values e.g. showSolution -> score * 0 = 0
+ */
+export const impactMethodsToScore = {
+  "fillZeros": 0.5,
+  "showSolution": 0,
+  "copyToClipboard": 1,
+};
+
 export default {
   props: { componentID: Number, storeObject: Object },
   components: {
