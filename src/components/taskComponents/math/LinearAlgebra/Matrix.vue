@@ -32,6 +32,8 @@ import { Matrix } from "@/helpers/LinearAlgebra";
 import MatrixField from "@/components/taskComponents/math/LinearAlgebra/MatrixField.vue";
 import type { IMatrixComponent, IMatrixInstruction } from "@/interfaces/componentInterfaces/MatrixInterface";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
+import type {IMethodsDefinition} from "@/interfaces/TaskGraphInterface";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 /**
  * multiply the score for this component with these values e.g. showSolution -> score * 0 = 0
@@ -268,12 +270,7 @@ export default {
         window.navigator.clipboard.writeText(csv);
       }
     };
-    const selectedMethods = () => {
-      return Object.entries(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`)).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = getSelectedMethods(<IMethodsDefinition>getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`), methods);
 
     return {
       id: props.componentID,
@@ -282,7 +279,7 @@ export default {
       rowLabel,
       columnLabel,
       isReadOnly,
-      selectedMethods: selectedMethods()
+      selectedMethods: selectedMethods
     };
   }
 };

@@ -49,6 +49,7 @@ import { onMounted, computed, watch, ref } from "vue";
 import Button from "@/components/Button.vue";
 import ControlObject from "@/components/taskComponents/dijkstra/ControlObject.vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 export default {
   components: {
@@ -102,12 +103,7 @@ export default {
         setProperty({ path: `${path}__component__controlObject`, value: controlObject });
       },
     };
-    const selectedMethods = () => {
-      return Object.entries(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`)).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = getSelectedMethods(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`), methods);
 
     const maxRows = getProperty("taskData__edges").length;
     const addRow = () => {
@@ -124,7 +120,7 @@ export default {
       { deep: true }
     );
 
-    return { nodes, userRows, addRow, removeRow, maxRows, labels, colorScheme, selectedMethods: selectedMethods() };
+    return { nodes, userRows, addRow, removeRow, maxRows, labels, colorScheme, selectedMethods: selectedMethods };
   },
 };
 </script>
