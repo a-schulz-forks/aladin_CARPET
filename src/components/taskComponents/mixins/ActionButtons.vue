@@ -37,8 +37,6 @@ export default {
       const { type, instruction, parameters } = props.actions[actionId];
 
       props.actionTypes[type](instruction, parameters);
-      console.log(props.actions[actionId])
-      console.log(props.actionTypes[typxe](instruction, parameters))
     };
 
     return { handleAction };
