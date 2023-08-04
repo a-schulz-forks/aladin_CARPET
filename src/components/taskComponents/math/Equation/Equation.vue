@@ -9,19 +9,19 @@
 </template>
 
 <script lang="ts">
-import Term from "@/components/taskComponents/math/Term.vue";
+import Term from "@/components/taskComponents/math/Equation/Term.vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
-import { computed, onMounted, provide, watch } from "vue";
+import { computed, provide, watch } from "vue";
 
 export default {
   name: "Equation",
   components: {
     Term,
-    ContextMenu,
+    ContextMenu
   },
   props: {
     componentID: Number,
-    storeObject: Object,
+    storeObject: Object
   },
   setup(props) {
     const { store, getProperty, setProperty } = props.storeObject;
@@ -73,7 +73,7 @@ export default {
             setProperty({ path: `${ASTPath}__${element.dataset.path}__userValue`, value: scalar.value });
           }
         });
-      },
+      }
     };
     const selectedMethods = () => {
       return Object.entries(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`)).reduce(
@@ -87,9 +87,9 @@ export default {
       rightTerm,
       comparisonOperator,
       validate,
-      selectedMethods: selectedMethods(),
+      selectedMethods: selectedMethods()
     };
-  },
+  }
 };
 </script>
 

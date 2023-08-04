@@ -20,12 +20,14 @@ export default {
     storeObject: Object
   },
   setup(props) {
-    const { getProperty, setProperty } = props.storeObject;
+    const { getProperty, setProperty } = props.storeObject as { getProperty: Function; setProperty: Function };
+    const taskMode = getProperty("taskMode");
     const router = useRouter();
     const rootNode = getProperty("rootNode");
-    const currentNode = computed(() => getProperty("currentNode"));
+    const currentNode = getProperty("currentNode");
+
     const next = computed(() => {
-      const edges = getProperty("edges")[currentNode.value];
+      const edges = getProperty("edges")[currentNode];
       if (edges) return edges[0];
       return null;
     });
@@ -33,7 +35,7 @@ export default {
       return getProperty("previousNode");
     });
 
-    const isRootNote = rootNode == currentNode.value;
+    const isRootNote = rootNode == currentNode;
 
     const findPrevious = (to: number) => {
       const edges: { [id: number]: Array<number> } = getProperty("edges");
@@ -46,21 +48,46 @@ export default {
       return previousId;
     };
 
-    const componentValidities = computed(() => {
-      const edges = getProperty("edges");
-      if (edges && edges[currentNode.value]) {
-        if (edges[currentNode.value].length > 1) return [true];
-        const components = getProperty(`nodes__${currentNode.value}__components`);
-        if (components) return Object.values(components).map((component: any) => component.isValid);
-      }
-      return [false];
-    });
+    type ComponentValidites = Array<boolean>;
 
-    const validate = (componentValidities) => {
+    const components = computed(() => getProperty(`nodes__${currentNode}__components`));
+
+    // const componentValidities: ComputedRef<ComponentValidites> = computed(() => {
+    //   const edges = getProperty("edges");
+    //   if (edges && edges[currentNode]) {
+    //     if (edges[currentNode].length > 1) return [true];
+    //     const components = getProperty(`nodes__${currentNode}__components`);
+    //     if (components)
+    //       return Object.values(components).map((component: any) => {
+    //         if (taskMode === "practice") {
+    //           return component.isValid && "isCorrect" in component ? component.isCorrect : true;
+    //         } else {
+    //           return component.isValid;
+    //         }
+    //       });
+    //   }
+    //   return [false];
+    // });
+
+    const validateComponents = () => {
+      const isCorrect = Object.values(components.value).every((component: any) => {
+        // not every component requires a correctness check, so skip those
+        if (component.isCorrect === undefined) return true;
+        return component.isCorrect;
+      });
+      const isValid =
+        taskMode.value === "practice"
+          ? isCorrect && Object.values(components.value).every((component: any) => component.isValid)
+          : Object.values(components.value).every((component: any) => component.isValid);
+
+      return { isValid, isCorrect };
+    };
+
+    const controlNavigationGuard = (isValid: boolean) => {
       const navForwards: Array<HTMLElement> = Array.from(document.querySelectorAll(".traverse.forward"));
       navForwards.forEach((navForward) => {
-        const validityElement: HTMLElement = navForward.querySelector(".validity");
-        if (componentValidities.every((validity) => validity)) {
+        const validityElement = <HTMLElement>navForward.querySelector(".validity");
+        if (isValid) {
           navForward.classList.remove("inValid");
           validityElement.innerHTML = "&#10004;";
         } else if (validityElement) {
@@ -71,16 +98,29 @@ export default {
     };
 
     onMounted(() => {
-      validate(componentValidities.value);
+      const { isValid } = validateComponents();
+
+      controlNavigationGuard(isValid);
     });
 
-    watch(componentValidities, (newValidities) => {
-      validate(newValidities);
-    });
+    watch(
+      components,
+      () => {
+        setTimeout(() => {
+          const { isValid, isCorrect } = validateComponents();
+          const currentNodeElement = getProperty(`nodes__${currentNode}`);
+          setProperty({ path: `nodes__${currentNode}__isValid`, value: isValid });
+          if ("isCorrect" in currentNodeElement) setProperty({ path: `nodes__${currentNode}__isCorrect`, value: isCorrect });
 
-    const navigate = (event) => {
-      const navElement = event.currentTarget;
-      const { direction, to } = navElement.dataset;
+          controlNavigationGuard(isValid);
+        }, 50);
+      },
+      { deep: true }
+    );
+
+    const navigate = (event: Event) => {
+      const navElement = <HTMLElement>event.currentTarget;
+      const { direction, to } = <{ direction: string; to: string }>navElement.dataset;
 
       const previousId = findPrevious(parseInt(to));
 

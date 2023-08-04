@@ -1,5 +1,5 @@
-import { IStore } from "@/helpers/TaskGraphUtility";
-import { IFormulaGenerator } from "@/interfaces/interjectionInterfaces/formulaGeneratorInterface";
+import type { IStore } from "@/helpers/TaskGraphUtility";
+import type { IFormulaGenerator } from "@/interfaces/interjectionInterfaces/formulaGeneratorInterface";
 
 const mathlex = window.MathLex;
 
@@ -19,9 +19,13 @@ interface IExpressionHandler {
 
 // TODO restructure without relying on global variable
 var decimals = 2;
-const roundValue = (value: any) => parseFloat(parseFloat((value as unknown) as string).toFixed(decimals));
+const roundValue = (value: any) => parseFloat(parseFloat(value as unknown as string).toFixed(decimals));
 
-const formulaGenerator = (storeObject: IStore, dependencies: IFormulaGenerator["dependencies"], component_id: string = "0") => {
+const formulaGenerator = (
+  storeObject: IStore,
+  dependencies: IFormulaGenerator["dependencies"],
+  component_id: string = "0"
+) => {
   const { getProperty, setProperty } = storeObject;
   const currentNode = getProperty(`currentNode`);
 
@@ -91,8 +95,8 @@ const negativeHandler = (operator: string, leftSubtree: IParsedTree, rightSubtre
       value: `(- ${roundValue(leftSubtree)})`,
       datatype: rightSubtree,
       userValue: "",
-      valueType: "constant",
-    },
+      valueType: "constant"
+    }
   ];
 };
 const exponentHandler = (operator: string, leftSubtree: IParsedTree, rightSubtree: IParsedTree) => {
@@ -101,16 +105,16 @@ const exponentHandler = (operator: string, leftSubtree: IParsedTree, rightSubtre
       type: "power",
       slots: [
         { name: "base", terms: leftSubtree },
-        { name: "exponent", terms: rightSubtree },
-      ],
-    },
+        { name: "exponent", terms: rightSubtree }
+      ]
+    }
   ];
 };
 const equationHandler = (operator: string, leftSubtree: IParsedTree, rightSubtree: IParsedTree) => {
   return {
     leftTerm: leftSubtree,
     comparisonOperator: operator,
-    rightTerm: rightSubtree,
+    rightTerm: rightSubtree
   };
 };
 const fractionHandler = (operator: string, leftSubtree: IParsedTree, rightSubtree: IParsedTree) => {
@@ -119,16 +123,16 @@ const fractionHandler = (operator: string, leftSubtree: IParsedTree, rightSubtre
       type: "fraction",
       slots: [
         { name: "numerator", terms: leftSubtree },
-        { name: "denominator", terms: rightSubtree },
-      ],
-    },
+        { name: "denominator", terms: rightSubtree }
+      ]
+    }
   ];
 };
 const baseOperationHandler = (operator: string, leftSubtree: IParsedTree, rightSubtree: IParsedTree) => {
   const operatorMap: { [key: string]: string } = {
     Plus: "+",
     Minus: "-",
-    Times: "*",
+    Times: "*"
   };
   return [
     {
@@ -136,9 +140,9 @@ const baseOperationHandler = (operator: string, leftSubtree: IParsedTree, rightS
       options: { operation: operatorMap[operator] },
       slots: [
         { name: "firstOperand", terms: leftSubtree },
-        { name: "secondOperand", terms: rightSubtree },
-      ],
-    },
+        { name: "secondOperand", terms: rightSubtree }
+      ]
+    }
   ];
 };
 const subscriptHandler = (operator: string, leftSubtree: IParsedTree, rightSubtree: IParsedTree) => {
@@ -156,7 +160,7 @@ const functionHandler = (functionType: string, subtrees: Array<IParsedTree>, var
 
     const operationTable: { [key: string]: string } = {
       sum: "+",
-      prod: "*",
+      prod: "*"
     };
     const operation = operationTable[functionType];
 
@@ -175,8 +179,8 @@ const functionHandler = (functionType: string, subtrees: Array<IParsedTree>, var
         options: { operation },
         slots: [
           { name: "firstOperand", terms: [previousOperand] },
-          { name: "secondOperand", terms: [replacedOperand] },
-        ],
+          { name: "secondOperand", terms: [replacedOperand] }
+        ]
       };
       previousOperand = parsedTerm;
 
@@ -196,8 +200,8 @@ const functionHandler = (functionType: string, subtrees: Array<IParsedTree>, var
     return [
       {
         type: "radical",
-        slots: [{ name: "index", terms: exponent }, parsedRadicand],
-      },
+        slots: [{ name: "index", terms: exponent }, parsedRadicand]
+      }
     ];
   };
 
@@ -205,7 +209,7 @@ const functionHandler = (functionType: string, subtrees: Array<IParsedTree>, var
     sum: rangeHandler,
     prod: rangeHandler,
     root: rootHandler,
-    sqrt: rootHandler,
+    sqrt: rootHandler
   };
 
   return functionMap[functionType]();
@@ -218,7 +222,7 @@ const expressionHandler: IExpressionHandler = {
       Greater: ">",
       LessEqual: "<=",
       GreaterEqual: ">=",
-      Unequal: "!=",
+      Unequal: "!="
     };
     return equationHandler(operationTable[operation], leftSubtree, rightSubtree);
   },
@@ -229,7 +233,7 @@ const expressionHandler: IExpressionHandler = {
   Exponent: exponentHandler,
   Negative: negativeHandler,
   Subscript: subscriptHandler,
-  Inclusion: inclusionHandler,
+  Inclusion: inclusionHandler
 };
 
 const ASTParser = (abstractSyntaxTree: AbstractSyntaxTree, variableTable: IVariableTable): IParsedTree => {
@@ -248,8 +252,8 @@ const ASTParser = (abstractSyntaxTree: AbstractSyntaxTree, variableTable: IVaria
     //     [ 'Variable', 'root' ],
     //     [ [ 'Literal', 'Int', 2 ], [ 'Literal', 'Int', 5 ] ]
     //   ]
-    const functionType: string = (operand1[1] as unknown) as string;
-    const operands = operand2.map((term) => ASTParser((term as unknown) as AbstractSyntaxTree, variableTable));
+    const functionType: string = operand1[1] as unknown as string;
+    const operands = operand2.map((term) => ASTParser(term as unknown as AbstractSyntaxTree, variableTable));
 
     return functionHandler(functionType, operands, variableTable);
   }

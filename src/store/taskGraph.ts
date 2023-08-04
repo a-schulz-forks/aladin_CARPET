@@ -1,10 +1,11 @@
-import { createStore, createLogger } from "vuex";
+import { createStore } from "vuex";
 import axios from "axios";
-import { IState, IReplay } from "@/interfaces/TaskGraphInterface";
+import type { IState, IReplay } from "@/interfaces/TaskGraphInterface";
 
-const baseState: IState = {
+const baseState = (): IState => ({
   isLoading: false,
   currentTask: null,
+  taskMode: null,
   layoutSize: "lg",
   currentNode: null,
   previousNode: null,
@@ -15,7 +16,7 @@ const baseState: IState = {
   taskData: {},
   taskReplay: { steps: [], mouse: [], panning: [], zooming: [], meta: {} },
   restoredFromReplay: false
-};
+});
 
 const extractMetaInformation = (state: IState, replay: IReplay) => {
   const calcDuration = (replay: IReplay) => {
@@ -43,10 +44,23 @@ const extractMetaInformation = (state: IState, replay: IReplay) => {
   return { task, completion, date, duration };
 };
 
-const state: IState = { ...baseState };
+const state: IState = { ...baseState() };
 const mutations = {
   RESET(state: IState) {
-    state = { ...baseState };
+    // TODO: reset nested state to base state in bulk (or just migrate to Pinia)
+    // state = baseState();
+    // state.isLoading = false;
+    // state.currentTask = null;
+    // state.layoutSize = "lg";
+    // state.currentNode = null;
+    // state.previousNode = null;
+    // state.rootNode = null;
+    // state.topology = [];
+    // state.edges = {};
+    // state.nodes = {};
+    // state.restoredFromReplay = false;
+    state.taskData = {};
+    state.taskReplay = { steps: [], mouse: [], panning: [], zooming: [], meta: {} };
   },
   TOGGLE_LOADING(state: IState) {
     state.isLoading = !state.isLoading;
@@ -124,12 +138,13 @@ const actions = {
       commit("RESET");
       const result = await axios.post("/api/fetchTaskGraph", payload);
       const { UI } = JSON.parse(result.data);
-      const { topology, edges, nodes, rootNode } = UI;
+      const { topology, edges, nodes, rootNode, taskMode } = UI;
       commit("SET_PROPERTY", { path: "topology", value: topology });
       commit("SET_PROPERTY", { path: "edges", value: edges });
       commit("SET_PROPERTY", { path: "nodes", value: nodes });
       commit("SET_PROPERTY", { path: "rootNode", value: rootNode });
       commit("SET_PROPERTY", { path: "currentNode", value: rootNode });
+      commit("SET_PROPERTY", { path: "taskMode", value: taskMode });
       commit("TOGGLE_LOADING");
     } catch (error) {
       console.log(error);

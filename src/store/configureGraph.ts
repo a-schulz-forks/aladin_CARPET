@@ -55,7 +55,7 @@ const state: IState = {
               }
             },
             userData: null,
-            validationData: null,
+            solutionData: null,
             readOnly: false,
             rowLabel: "taskData__labelVector",
             columnLabel: "taskData__labelVector"

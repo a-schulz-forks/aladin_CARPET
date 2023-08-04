@@ -18,18 +18,18 @@ import Button from "@/components/Button.vue";
 export default {
   name: "FolderTabs",
   props: {
-    tabs: Object,
+    tabs: Object
   },
   components: { Button },
-  setup(props) {
-    const clickHandler = (event) => {
-      const tab: HTMLElement = event.currentTarget;
-      const previouslyActive: HTMLElement = document.querySelector(".active.tab");
+  setup() {
+    const clickHandler = (event: Event) => {
+      const tab = <HTMLElement>event.currentTarget;
+      const previouslyActive = <HTMLElement>document.querySelector(".active.tab");
       if (previouslyActive) previouslyActive.classList.remove("active");
       if (tab != previouslyActive) tab.classList.add("active");
     };
     return { clickHandler };
-  },
+  }
 };
 </script>
 

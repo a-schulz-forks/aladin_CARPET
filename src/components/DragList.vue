@@ -6,7 +6,7 @@
     :component-data="{
       tag: 'ul',
       type: 'transition-group',
-      name: !drag ? 'flip-list' : null,
+      name: !drag ? 'flip-list' : null
     }"
     @start="drag = true"
     @end="drag = false"
@@ -37,10 +37,10 @@ export default {
     name: String,
     pullAction: [Boolean, String, Array],
     putAction: [Boolean, Array],
-    uniqueValues: Boolean,
+    uniqueValues: Boolean
   },
   components: {
-    draggable,
+    draggable
   },
   setup(props) {
     let data;
@@ -68,7 +68,7 @@ export default {
 
     const dragOptions = {
       animation: 200,
-      ghostClass: "ghost",
+      ghostClass: "ghost"
     };
 
     const cancelInvalid = (dragEvent, domEvent) => {
@@ -84,7 +84,7 @@ export default {
     };
 
     return { data, dragOptions, enabled, drag, cancelInvalid };
-  },
+  }
 };
 </script>
 

@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import Fraction from "@/components/taskComponents/math/Fraction.vue";
-import Power from "@/components/taskComponents/math/Power.vue";
-import Scalar from "@/components/taskComponents/math/Scalar.vue";
-import BaseOperation from "@/components/taskComponents/math/BaseOperation.vue";
-import Radical from "@/components/taskComponents/math/Radical.vue";
+import Fraction from "@/components/taskComponents/math/Equation/Fraction.vue";
+import Power from "@/components/taskComponents/math/Equation/Power.vue";
+import Scalar from "@/components/taskComponents/math/Equation/Scalar.vue";
+import BaseOperation from "@/components/taskComponents/math/Equation/BaseOperation.vue";
+import Radical from "@/components/taskComponents/math/Equation/Radical.vue";
 
 export default {
   name: "Term",
@@ -32,15 +32,15 @@ export default {
     Power,
     Scalar,
     BaseOperation,
-    Radical,
+    Radical
   },
   props: {
     terms: [Array, Object],
-    path: String,
+    path: String
   },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 

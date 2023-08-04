@@ -1,5 +1,6 @@
 const sum = (list: Array<number>): number => list.reduce((sum, element) => (sum += element), 0);
-const basicallyEqual = (one, other, epsilon = 0.00000001): boolean => Math.abs(one - other) < epsilon;
+const basicallyEqual = (one: number, other: number, epsilon: number = 0.00000001): boolean =>
+  Math.abs(one - other) < epsilon;
 
 // Original Implemenation -> https://geekrodion.com/blog/linear-algebra
 
@@ -82,7 +83,9 @@ class Matrix {
       throw new Error("Matrices do not possess the same rank!");
     }
     const columns = M2.getColumns();
-    const result = this.rows.map((row) => columns.map((column) => sum(row.map((element, elementIndex) => element * column[elementIndex]))));
+    const result = this.rows.map((row) =>
+      columns.map((column) => sum(row.map((element, elementIndex) => element * column[elementIndex])))
+    );
     return new Matrix(...result);
   }
 
@@ -90,7 +93,7 @@ class Matrix {
     return new Matrix(...this.getColumns());
   }
 
-  getDeterminant() {
+  getDeterminant(): number {
     if (this.rows.length !== this.rows[0].length) {
       throw new Error("Matrix is not quadratic!");
     }
@@ -112,7 +115,9 @@ class Matrix {
   }
 
   getMinor(rowIndex: number, columnIndex: number) {
-    const result = this.sliceElementAtIndex(this.rows, rowIndex).map((row: Array<number>) => this.sliceElementAtIndex(row, columnIndex));
+    const result = this.sliceElementAtIndex(this.rows, rowIndex).map((row: Array<number>) =>
+      this.sliceElementAtIndex(row, columnIndex)
+    );
     const matrix = new Matrix(...result);
     return matrix.getDeterminant();
   }
@@ -124,11 +129,15 @@ class Matrix {
   }
 
   map(operation: Function) {
-    return new Matrix(...this.rows.map((row, rowIndex) => row.map((element, elementIndex) => operation(element, rowIndex, elementIndex))));
+    return new Matrix(
+      ...this.rows.map((row, rowIndex) => row.map((element, elementIndex) => operation(element, rowIndex, elementIndex)))
+    );
   }
 
   getAdjugate() {
-    return this.map((element, rowIndex, elementIndex) => this.getCofactor(rowIndex, elementIndex)).transpose();
+    return this.map((element: number, rowIndex: number, elementIndex: number) =>
+      this.getCofactor(rowIndex, elementIndex)
+    ).transpose();
   }
 
   getInverse(): Matrix {
@@ -139,17 +148,17 @@ class Matrix {
     // const adjugate = this.getAdjugate();
     // return adjugate.scale(1 / determinant);
 
-    function invertMatrix(M) {
+    function invertMatrix(M: Array<Array<number>>): Array<Array<number>> | undefined {
       if (M.length !== M[0].length) {
         return;
       }
       let i = 0,
         ii = 0,
         j = 0,
-        dim = M.length,
         e = 0;
-      let I = [],
-        C = [];
+      const dim = M.length;
+      const I: Array<Array<number>> = [];
+      const C: Array<Array<number>> = [];
       for (i = 0; i < dim; i += 1) {
         I[I.length] = [];
         C[C.length] = [];
@@ -201,7 +210,7 @@ class Matrix {
       }
       return I;
     }
-    return new Matrix(...invertMatrix(this.getRows()));
+    return new Matrix(...(<Array<Array<number>>>invertMatrix(this.getRows())));
   }
 
   getIdentity() {
@@ -218,8 +227,8 @@ class Matrix {
     //   .map((e: number) => Math.abs(Math.round(e)));
   }
 
-  public getValueInitializedMatrix(value: number | null) {
-    return this.map((element) => (element = value));
+  public getValueInitializedMatrix(value: number | object | null) {
+    return this.map(() => value);
   }
 }
 

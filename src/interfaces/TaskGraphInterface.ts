@@ -1,7 +1,7 @@
-import { IMatrixComponent } from "@/interfaces/componentInterfaces/MatrixInterface";
-import { IDOTGraphComponent } from "@/interfaces/componentInterfaces/DOTGraphInterface";
-import { ITaskConfigurationComponent } from "@/interfaces/componentInterfaces/TaskConfigurationInterface";
-import { IDecisionNode } from "@/interfaces/componentInterfaces/DecisionNodeInterface";
+import type { IMatrixComponent } from "@/interfaces/componentInterfaces/MatrixInterface";
+import type { IDOTGraphComponent } from "@/interfaces/componentInterfaces/DOTGraphInterface";
+import type { ITaskConfigurationComponent } from "@/interfaces/componentInterfaces/TaskConfigurationInterface";
+import type { IDecisionNode } from "@/interfaces/componentInterfaces/DecisionNodeInterface";
 
 // defaults to string as typescript not yet allows for true regex based string checks
 // must have shape "i__am__a__path"
@@ -24,6 +24,7 @@ export interface ILayouts {
   sm: ILayout[];
   md: ILayout[];
   lg: ILayout[];
+  [key: string]: ILayout[];
 }
 
 interface IDependencies {
@@ -119,4 +120,4 @@ interface IState {
   restoredFromReplay?: boolean;
 }
 
-export { IState, IComponent };
+export type { IState, IComponent };

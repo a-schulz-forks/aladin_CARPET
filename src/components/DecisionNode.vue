@@ -3,13 +3,13 @@
     <div class="traverse backward" :data-to="previous" @click="navigateBackwards">
       <p>&#9658;</p>
     </div>
-    <FolderTabs :tabs="tabs"></FolderTabs>
+    <FolderTabs :tabs="tabs" :storeObject="storeObject"></FolderTabs>
   </div>
 </template>
 
 <script lang="ts">
 import FolderTabs from "@/components/FolderTabs.vue";
-import { onMounted, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
@@ -42,9 +42,14 @@ export default {
       document.querySelector(".traverse.backward").classList.add("fadeOut");
 
       const button: HTMLElement = event.target;
+      const titleElement = <HTMLElement>button.parentElement?.parentElement?.querySelector(".title");
+      const title = titleElement.textContent;
+
       const nodeId = button.dataset.id;
       setProperty({ path: "previousNode", value: currentNode });
       setProperty({ path: "currentNode", value: nodeId });
+
+      setProperty({ path: `nodes__${currentNode}__chosenPath`, value: title });
     };
 
     const navigateBackwards = (event) => {
@@ -68,7 +73,7 @@ export default {
     });
 
     return { tabs, previous, navigateBackwards };
-  },
+  }
 };
 </script>
 

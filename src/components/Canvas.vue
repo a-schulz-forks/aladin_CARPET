@@ -23,13 +23,13 @@
       >
         <grid-item
           v-for="item in currentLayout"
-          :key="item.i"
+          :key="nodeComponentIds[item.i]"
           :static="item.static"
           :x="item.x"
           :y="item.y"
           :w="item.w"
           :h="item.h"
-          :i="item.i"
+          :i="nodeComponentIds[item.i]"
           :scale="zoomScale"
           drag-allow-from=".dragHandler"
           drag-ignore-from=".ignoreDrag"
@@ -37,10 +37,14 @@
           @resized="updateDimensions"
           :preserveAspectRatio="true"
           :autosize="true"
-          :data-id="item.i"
+          :data-id="nodeComponentIds[item.i]"
         >
           <img class="dragHandler" src="/img/drag_arrow.webp" />
-          <component :is="nodeComponents[item.i].type" :componentID="item.i" :storeObject="storeObject"></component>
+          <component
+            :is="nodeComponents[nodeComponentIds[item.i]].type"
+            :componentID="parseInt(nodeComponentIds[item.i])"
+            :storeObject="storeObject"
+          ></component>
         </grid-item>
       </grid-layout>
     </div>
@@ -59,7 +63,7 @@ import Hint from "@/components/Hint.vue";
 import TextArea from "@/components/TextArea.vue";
 import Modal from "@/components/Modal.vue";
 
-import Matrix from "@/components/taskComponents/Matrix.vue";
+import Matrix from "@/components/taskComponents/math/LinearAlgebra/Matrix.vue";
 import DOTGraph from "@/components/taskComponents/DOTGraph.vue";
 import TaskConfiguration from "@/components/taskComponents/TaskConfiguration.vue";
 import VisualGraphTraversal from "@/components/taskComponents/VisualGraphTraversal.vue";
@@ -69,8 +73,8 @@ import Output from "@/components/taskComponents/Output.vue";
 import Dropdown from "@/components/taskComponents/Dropdown.vue";
 import ContourPlot from "@/components/taskComponents/ContourPlot.vue";
 import BackgroundGraph from "@/components/taskComponents/BackgroundGraph.vue";
-import Equation from "@/components/taskComponents/math/Equation.vue";
-import TexDisplay from "@/components/taskComponents/math/TexDisplay.vue";
+import Equation from "@/components/taskComponents/math/Equation/Equation.vue";
+import TexDisplay from "@/components/taskComponents/math/Equation/TexDisplay.vue";
 import DijkstraTable from "@/components/taskComponents/dijkstra/DijkstraTable.vue";
 import DijkstraGraph from "@/components/taskComponents/dijkstra/DijkstraGraph.vue";
 import PlanGraph from "@/components/taskComponents/scheduling/PlanGraph.vue";
@@ -125,6 +129,7 @@ export default {
     const rowHeight = 10000 / columnAmount;
     const zoomScale = computed(() => getProperty("zoomScale"));
     const nodeComponents = computed(() => getProperty(`nodes__${currentNode}__components`));
+    const nodeComponentIds = Object.keys(nodeComponents.value).map((componentId) => componentId);
     const layouts = computed(() => getProperty(`nodes__${currentNode}__layouts`));
     const layoutSize = computed(() => getProperty(`layoutSize`));
     const currentLayout = computed(() => {
@@ -222,7 +227,8 @@ export default {
       rowHeight,
       setCoordinates,
       layoutSize,
-      modals
+      modals,
+      nodeComponentIds
     };
   }
 };

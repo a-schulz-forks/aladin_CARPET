@@ -1,16 +1,20 @@
 import { matrixSelfMultiplication } from "@/interjections/matrixSelfMultiplication";
 import { formulaGenerator } from "@/interjections/FormulaGenerator";
-import { IStore } from "@/helpers/TaskGraphUtility";
-import { IInterjection } from "@/interfaces/TaskGraphInterface";
+import type { IStore } from "@/helpers/TaskGraphUtility";
+import type { IInterjection } from "@/interfaces/TaskGraphInterface";
 
-const interjectionMap = {
+const interjectionMap: { [key: string]: Function } = {
   matrixSelfMultiplication,
-  formulaGenerator,
+  formulaGenerator
 };
 
-export const interjectionHandler = async (storeObject: IStore, interjections: Array<IInterjection>, interjectionPath: string) => {
+export const interjectionHandler = async (
+  storeObject: IStore,
+  interjections: Array<IInterjection>,
+  interjectionPath: string
+) => {
   let i = 0;
-  for (let interjection of interjections) {
+  for (const interjection of interjections) {
     const { method, dependencies, applied, component_id } = interjection;
     if (applied) continue;
     if (Reflect.has(interjectionMap, method)) {

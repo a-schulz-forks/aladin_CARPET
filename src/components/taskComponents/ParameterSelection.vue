@@ -3,7 +3,12 @@
     <h2>{{ title }}</h2>
     <div class="parameter_form_columns">
       <div class="parameter_labels">
-        <p v-for="(element, key) in elements" :key="key" v-html="element.label" v-tooltip.left-center="element.description || ''" />
+        <p
+          v-for="(element, key) in elements"
+          :key="key"
+          v-html="element.label"
+          v-tooltip.left-center="element.description || ''"
+        />
       </div>
       <div class="parameter_fields">
         <component
@@ -34,7 +39,7 @@ import ActionButtons from "@/components/taskComponents/mixins/ActionButtons.vue"
 export default {
   props: {
     componentID: Number,
-    storeObject: Object,
+    storeObject: Object
   },
   components: {
     RangeFormField,
@@ -42,10 +47,15 @@ export default {
     CheckboxFormField,
     ValueFormField,
     DualSlider,
-    ActionButtons,
+    ActionButtons
   },
   setup(props) {
-    const { store, getProperty, setProperty } = props.storeObject;
+    const { store, getProperty, setProperty } = props.storeObject as {
+      store: any;
+      getProperty: Function;
+      setProperty: Function;
+    };
+
     const currentNode = store.state.currentNode;
     const path = `nodes__${currentNode}__components__${props.componentID}`;
 
@@ -62,8 +72,8 @@ export default {
 
     const elements = computed(() => getProperty(`${path}__component__form`));
 
-    const updateElement = (event) => {
-      const { classList, value, type, checked } = event.target;
+    const updateElement = (event: Event) => {
+      const { classList, value, type, checked } = <HTMLFormElement>event.target;
       const className = classList[0];
       const payload = type === "checkbox" ? checked : value;
       const elementPath = `${path}__component__form__${className}`;
@@ -105,15 +115,18 @@ export default {
     const currentTask = computed(() => getProperty("currentTask"));
 
     const fetchData = (instruction) => {
-      store.dispatch("fetchTaskData", { payload: preparePayload(instruction), endpoint: `${currentTask.value}/${instruction}` });
+      store.dispatch("fetchTaskData", {
+        payload: preparePayload(instruction),
+        endpoint: `${currentTask.value}/${instruction}`
+      });
     };
 
     const actionTypes = {
-      fetchData,
+      fetchData
     };
 
     return { elements, updateElement, actions, actionTypes, title };
-  },
+  }
 };
 </script>
 

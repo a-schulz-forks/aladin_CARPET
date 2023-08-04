@@ -14,7 +14,7 @@ interface IMatrixComponent extends IComponent {
   };
   component: {
     initialize: IMatrixInstruction;
-    validationData: null | Matrix;
+    solutionData: null | Matrix;
     userData: null | Matrix;
     readOnly: boolean;
     rowLabel: string;
