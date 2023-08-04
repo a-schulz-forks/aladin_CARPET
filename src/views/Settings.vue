@@ -7,11 +7,9 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import {computed, ref, watch} from "vue";
-import {useGamifyStore} from "@/stores/gamify";
-
-const gamifyStore = useGamifyStore();
+<script lang="ts">
+import Equation from "@/components/taskComponents/math/Equation.vue";
+import { mathlex } from "@/helpers/FormulaGenerator";
 
 const labelPaths = ref(false);
 watch(() => labelPaths.value, (value) => {
