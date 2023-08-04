@@ -119,5 +119,13 @@ interface IState {
   taskReplay?: IReplay;
   restoredFromReplay?: boolean;
 }
+interface IMethodsDefinition {
+  [key:string] : {"description": string, "impact": number}
+}
 
-export type { IState, IComponent };
+interface IMethodImplementations {
+    [key:string] : Function
+}
+
+export type { IState, IComponent, IMethodsDefinition, IMethodImplementations };
+
