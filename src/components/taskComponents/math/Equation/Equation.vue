@@ -12,6 +12,7 @@
 import Term from "@/components/taskComponents/math/Equation/Term.vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 import { computed, provide, watch } from "vue";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 export default {
   name: "Equation",
@@ -75,19 +76,14 @@ export default {
         });
       }
     };
-    const selectedMethods = () => {
-      return Object.entries(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`)).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = getSelectedMethods(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`), methods);
 
     return {
       leftTerm,
       rightTerm,
       comparisonOperator,
       validate,
-      selectedMethods: selectedMethods()
+      selectedMethods: selectedMethods
     };
   }
 };

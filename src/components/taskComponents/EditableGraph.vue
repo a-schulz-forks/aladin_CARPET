@@ -11,7 +11,11 @@ import { onMounted, onUnmounted, computed } from "vue";
 import DOTGraph from "@/components/taskComponents/DOTGraph.vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 import { pollGraphRender } from "@/helpers/HelperFunctions";
+<<<<<<< HEAD
 import type { ComponentProps } from "@/interfaces/ComponentInterface";
+=======
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
+>>>>>>> 26e34591a0f242b9d5b7b3d09c42bd58bc5c72f8
 
 const props = defineProps<ComponentProps>();
 
@@ -116,13 +120,52 @@ const methods = {
       path: `${path}__isValid`,
       value: true
     });
-  }
-};
-const selectedMethods = () => {
-  return Object.entries(getProperty(`${path}__methods`)).reduce(
-    (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-    {}
-  );
+
+    const validate = () => {
+      const nodes = getProperty(dependencies.EditableGraph.validation);
+      const isValid = nodes.every((node) => {
+        const { id } = node;
+        // TODO make editableFields Array of keys again and create replica of nodes for userValue to record changes in VUEX state and add node id to handler
+        // create deep watcher to extract the changed key<->value in new/old Value of watcher
+        // move assignment logic of textfield from the editSVGText-handler to watcher
+        return editableFields.every((field) => {
+          const correctValue = node[field];
+          const userValue = document.querySelector(`g.node[id="${id}"] g[id="a_${field}"] text`).textContent.trim();
+          return userValue == correctValue;
+        });
+      });
+
+      setProperty({
+        path: `${path}__isValid`,
+        value: isValid,
+      });
+    };
+
+    const methods = {
+      showSolution: () => {
+        // manually remove old svg, since foreignObjects might cause issues with the rerender
+        Array.from(document.querySelectorAll(selectors)).forEach((node) => node.removeEventListener("click", editSVGText));
+        const svg = document.querySelector(".dotGraph svg");
+        const dotGraph = getProperty(dependencies.DOTGraph.dotDescription);
+        const solution = getProperty(dependencies.EditableGraph.solution);
+        if (svg && dotGraph != solution) document.querySelector(".dotGraph").removeChild(svg);
+
+        setProperty({ path: dependencies.DOTGraph.dotDescription, value: solution });
+
+        pollGraphRender(".editableGraph .node", assignEventHandlers);
+        setProperty({
+          path: `${path}__isValid`,
+          value: true,
+        });
+      },
+    };
+    const selectedMethods = getSelectedMethods(getProperty(`${path}__methods`), methods);
+
+    return {
+      selectedMethods: selectedMethods,
+      id: props.componentID,
+    };
+  },
 };
 </script>
 

@@ -11,6 +11,7 @@ import { onMounted, onUnmounted, computed } from "vue";
 import DOTGraph from "@/components/taskComponents/DOTGraph.vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 import { pollGraphRender } from "@/helpers/HelperFunctions";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 export default {
   components: { DOTGraph, ContextMenu },
@@ -99,15 +100,10 @@ export default {
         validate();
       },
     };
-    const selectedMethods = () => {
-      return Object.entries(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`)).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = getSelectedMethods(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`), methods);
 
     return {
-      selectedMethods: selectedMethods(),
+      selectedMethods: selectedMethods,
       id: props.componentID,
     };
   },
