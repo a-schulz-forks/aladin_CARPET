@@ -16,6 +16,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-sql";
 import "ace-builds/src-noconflict/ext-modelist.js";
 import "ace-builds/src-noconflict/theme-dracula";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 // TODO add contextmenu methods, (showSolution), add conditional action-button (send Code)
 
@@ -126,18 +127,11 @@ export default {
       copyToClipboard: () => {},
     };
 
-    const selectedMethods = () => {
-      const serialisedMethods = getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`);
-      if (!serialisedMethods) return {};
-      return Object.entries(serialisedMethods).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = getSelectedMethods(getProperty(`nodes__${currentNode.value}__components__${props.componentID}__methods`), methods);
 
     const actions = computed(() => getProperty(`${path}__actions`));
 
-    return { code, selectedMethods: selectedMethods(), actionTypes, actions };
+    return { code, selectedMethods: selectedMethods, actionTypes, actions };
   },
 };
 </script>
