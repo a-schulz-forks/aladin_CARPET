@@ -47,8 +47,8 @@ const checkPaths = computed(() => gamifyStore.checkPaths);
 const isReplayGraph = computed(() => getProperty("restoredFromReplay"));
 
 if (typeof route.params.task === "string" && !isReplayGraph.value) {
-  setProperty({path: "currentTask", value: route.params.task});
   store.dispatch("fetchTaskGraph", {task: route.params.task});
+  setProperty({path: "currentTask", value: route.params.task}); //
 }
 
 const throttle = 50;
