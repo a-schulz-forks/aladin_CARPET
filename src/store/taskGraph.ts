@@ -160,7 +160,11 @@ const getters = {
     const splitPath = path.split("__");
     return splitPath.reduce((value, key) => {
       if (value && Object.keys(value).includes(key)) return value[key];
-      else return null;
+      else if (value) {
+        return null;
+      } else {
+        throw new Error(`Property not found in store: ${key}, ${value}`);
+      }
     }, state);
   }
 };

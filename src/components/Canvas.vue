@@ -80,6 +80,7 @@ import DijkstraGraph from "@/components/taskComponents/dijkstra/DijkstraGraph.vu
 import PlanGraph from "@/components/taskComponents/scheduling/PlanGraph.vue";
 import EditableGraph from "@/components/taskComponents/EditableGraph.vue";
 import GanttDiagram from "@/components/taskComponents/scheduling/GanttDiagram.vue";
+import DnDContainer from "@/components/taskComponents/DragDrop/DnDContainer.vue";
 
 export default {
   name: "Canvas",
@@ -107,7 +108,8 @@ export default {
     Modal,
     PlanGraph,
     EditableGraph,
-    GanttDiagram
+    GanttDiagram,
+    DnDContainer
   },
   props: {
     storeObject: Object
@@ -162,7 +164,8 @@ export default {
       });
       window.panzoom = panzoomInstance;
 
-      document.querySelector(".canvas").addEventListener("wheel", (event: WheelEvent) => {
+      const canvasElement = <HTMLElement>document.querySelector(".canvas");
+      canvasElement.addEventListener("wheel", (event: WheelEvent) => {
         panzoomInstance.zoomWithWheel(event);
         const scale = panzoomInstance.getScale();
         setProperty({ path: "zoomScale", value: scale });
@@ -170,7 +173,7 @@ export default {
         fixQuadraticItems();
       });
 
-      document.querySelector(".canvas").addEventListener("click", (event: MouseEvent) => {
+      canvasElement.addEventListener("click", (event: MouseEvent) => {
         const grid = event.target as HTMLElement;
         if (Array.from(grid.classList).includes("grid")) {
           const pan = panzoomInstance.getPan();
@@ -178,7 +181,7 @@ export default {
         }
       });
 
-      document.querySelector(".canvas").addEventListener("panzoompan", (event: MouseEvent) => {
+      canvasElement.addEventListener("panzoompan", (event: MouseEvent) => {
         if (event.target !== document.querySelector(".vue-grid-layout.grid")) {
           return;
         }

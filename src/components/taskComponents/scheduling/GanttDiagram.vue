@@ -46,6 +46,7 @@
 import { onMounted, computed } from "vue";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 import { throttle } from "@/helpers/HelperFunctions";
+import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
 export default {
   components: { ContextMenu },
@@ -141,15 +142,10 @@ export default {
         });
       },
     };
-    const selectedMethods = () => {
-      return Object.entries(getProperty(`${path}__methods`)).reduce(
-        (selectedMethods, [name, description]: [string, string]) => ({ ...selectedMethods, [description]: methods[name] }),
-        {}
-      );
-    };
+    const selectedMethods = () => getSelectedMethods(getProperty(`${path}__methods`), methods);
 
     return {
-      selectedMethods: selectedMethods(),
+      selectedMethods: selectedMethods,
       id: props.componentID,
       maxTime,
       events,

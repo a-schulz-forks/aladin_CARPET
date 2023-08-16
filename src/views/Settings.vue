@@ -3,12 +3,11 @@
 </template>
 
 <script lang="ts">
-
 export default {
   name: "Settings",
   setup() {
     return {};
-  },
+  }
 };
 </script>
 
