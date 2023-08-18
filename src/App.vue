@@ -2,16 +2,14 @@
   <RadialMenu/>
   <router-view/>
   <reporter-success-toast/>
-  <report-skill/>
 </template>
 
 <script lang="ts">
 import RadialMenu from "@/components/RadialMenu.vue";
 import ReporterSuccessToast from "@/components/gamification/ReporterSuccessToast.vue";
-import ReportSkill from "@/components/gamification/ReportSkill.vue";
 
 export default {
-  components: {ReportSkill, ReporterSuccessToast, RadialMenu},
+  components: {ReporterSuccessToast, RadialMenu},
   setup() {
     return {};
   }

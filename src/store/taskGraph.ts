@@ -2,6 +2,7 @@ import {createStore} from "vuex";
 import axios from "axios";
 import {IReplay, IState} from "@/interfaces/TaskGraphInterface";
 import {useGamifyStore} from "@/stores/gamify";
+import {submitSkill} from "@/components/gamification/ReportSkill";
 
 const baseState = (): IState => ({
     isLoading: false, currentTask: null, taskMode: null, layoutSize: "lg", currentNode: null, previousNode: null, rootNode: null, topology: [], edges: {}, nodes: {}, taskData: {}, taskReplay: {steps: [], mouse: [], panning: [], zooming: [], meta: {}}, restoredFromReplay: false
@@ -60,12 +61,14 @@ const mutations = {
         console.log(path, value);
 
         // save state on every mutation as a side effect for task replay
-        state.taskReplay.steps.push({timestamp: new Date().getTime(), ...JSON.parse(JSON.stringify(payload))});
+        const step = {timestamp: new Date().getTime(), ...JSON.parse(JSON.stringify(payload))}
+        state.taskReplay.steps.push(step);
 
         let subState = state;
         for (let depth = 0; depth < splitPath.length; depth++) {
             if (depth === splitPath.length - 1) subState[splitPath[depth]] = value; else subState = subState[splitPath[depth]];
         }
+        submitSkill(step, state.currentTask);
 
         // old inperformant way
         // const parsedPath = splitPath.reduce((parsedPath, substring) => {
