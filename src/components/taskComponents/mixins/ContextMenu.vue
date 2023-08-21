@@ -13,9 +13,9 @@ import "clickout-event";
 
 export default {
   name: "ContextMenu",
-  props: { componentId: Number, methods: Object, storeObject: Object },
+  props: {componentId: Number, methods: Object, storeObject: Object},
   setup(props) {
-    const { getProperty, setProperty } = props.storeObject;
+    const {getProperty, setProperty} = props.storeObject;
     const currentNode = getProperty("currentNode");
 
     const closeContextMenu = () => {
@@ -42,13 +42,13 @@ export default {
 
       setProperty({
         path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__usedMethods`,
-        value: method.name
+        value: [...usedMethods, method.name]
       });
 
       method();
     };
 
-    return { componentMethods: props.methods, id: props.componentId, openContextMenu, closeContextMenu, methodWrapper };
+    return {componentMethods: props.methods, id: props.componentId, openContextMenu, closeContextMenu, methodWrapper};
   }
 };
 </script>
