@@ -24,6 +24,7 @@ export interface ILayouts {
   sm: ILayout[];
   md: ILayout[];
   lg: ILayout[];
+
   [key: string]: ILayout[];
 }
 
@@ -34,6 +35,7 @@ interface IDependencies {
 }
 
 type keyboardEventProperties = "ctrlKey" | "altKey" | "key" | "keyCode";
+
 interface IKeyboardShortCut {
   property: keyboardEventProperties;
   value: boolean | number | string;
@@ -78,13 +80,14 @@ interface IComponents {
   [key: number]: IMatrixComponent | IDOTGraphComponent | ITaskConfigurationComponent | IComponent | object;
 }
 
-export interface ISteps {
+export interface IStep {
   "timestamp": number,
   "path": string,
   "value": string
 }
+
 export interface IReplay {
-  steps: Array<ISteps>;
+  steps: Array<IStep>;
   mouse?: Array<any>;
   panning?: Array<any>;
   zooming?: Array<any>;
@@ -102,12 +105,12 @@ interface INodes {
   [key: number]:
     | IDecisionNode
     | {
-        layouts: ILayouts;
-        hints?: IHint;
-        components: IComponents;
-        zoomScale: number;
-        interjections?: Array<IInterjection>;
-      };
+    layouts: ILayouts;
+    hints?: IHint;
+    components: IComponents;
+    zoomScale: number;
+    interjections?: Array<IInterjection>;
+  };
 }
 
 interface IState {
@@ -124,12 +127,13 @@ interface IState {
   taskReplay?: IReplay;
   restoredFromReplay?: boolean;
 }
+
 interface IMethodsDefinition {
-  [key:string] : {"description": string, "impact": number}
+  [key: string]: { "description": string, "impact": number };
 }
 
 interface IMethodImplementations {
-    [key:string] : Function
+  [key: string]: Function;
 }
 
 export type { IState, IComponent, IMethodsDefinition, IMethodImplementations };

@@ -1,8 +1,7 @@
 export interface ISkillsMapping {
-  [key: string]: {
-    skillId?: string,
-    distinction?: IDistinctionItem[]
-  };
+  [key: string]:
+    | { value: any, skillId?: string }
+    | { value: any, distinction?: IDistinctionItem[] };
 }
 
 export interface IDistinctionItem {
@@ -22,14 +21,17 @@ export const definition: IGamificationDefinition = {
   "Gozintograph": {
     "projectId": "aladin",
     "skillsMapping": {
-      "nodes__0__components__1": {
+      "nodes__0__components__1__isValid": {
+        "value": true,
         "skillId": "AufgabeParametrisierenSkill",
 
       },
-      "nodes__6__components__0": {
+      "nodes__6__components__0__isValid": {
+        "value": true,
         "skillId": "AdjazenzmatrixAblesenSkill",
       },
-      "nodes__7__components": {
+      "nodes__7__components__(\\d+)__isValid": {
+        "value": true,
         "distinction": [
           {
             "skillId": "GesamtbedarfsmatrixBestimmenSkill",
@@ -43,8 +45,9 @@ export const definition: IGamificationDefinition = {
           },
         ],
       },
-      "nodes__7__components__3": {
-        "skillId": "SekundärbedarfsvektorSkill",
+      "nodes__7__components__3__isValid": {
+        "value": true,
+        "skillId": "SekundaerbedarfsvektorBestimmenSkill",
       },
     },
   },
