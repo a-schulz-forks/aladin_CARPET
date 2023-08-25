@@ -5,15 +5,16 @@
 
 import {
   SkillsConfiguration,
-  SkillsDisplayJS
+  SkillsDisplayJS,
 } from "@skilltree/skills-client-js/dist/skills-client-js.esm.min.js";
-import {onMounted} from "vue";
+import { onMounted } from "vue";
+import * as bootstrap from "bootstrap";
 
-defineProps({
+const props = defineProps({
   modalId: {
     type: String,
-    default: "SkillDisplayModal"
-  }
+    default: "SkillDisplayModal",
+  },
 });
 
 onMounted(() => {
@@ -25,10 +26,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="{{modalId}}" aria-hidden="false" aria-labelledby="{{modalId}}Label" class="modal fade show"
+  <div :id="modalId" aria-hidden="false" :aria-labelledby="modalId + 'Label'" class="modal fade show"
        data-bs-backdrop="static"
        data-bs-keyboard="false" tabindex="-1" v-bind="$attrs">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>

@@ -1,18 +1,22 @@
 <template>
-  <RadialMenu/>
-  <router-view/>
-  <reporter-success-toast/>
+  <RadialMenu />
+  <router-view />
+  <reporter-success-toast />
+  <modal-skills-display modal-id="SkillDisplayModal" />
+  <skill-display-button modal-id="SkillDisplayModal" />
 </template>
 
 <script lang="ts">
 import RadialMenu from "@/components/RadialMenu.vue";
 import ReporterSuccessToast from "@/components/gamification/ReporterSuccessToast.vue";
+import ModalSkillsDisplay from "@/components/gamification/ModalSkillsDisplay.vue";
+import SkillDisplayButton from "@/components/gamification/SkillDisplayButton.vue";
 
 export default {
-  components: {ReporterSuccessToast, RadialMenu},
+  components: { SkillDisplayButton, ModalSkillsDisplay, ReporterSuccessToast, RadialMenu },
   setup() {
     return {};
-  }
+  },
 };
 </script>
 

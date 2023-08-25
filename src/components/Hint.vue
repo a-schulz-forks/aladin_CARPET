@@ -4,9 +4,12 @@
 
     <div class="hintText closed">
       <div class="hintNavigation">
-        <div class="backward" v-if="hints.descriptions.length > 1" @click="hintHandler" data-direction="backward">&#60;</div>
+        <div class="backward" v-if="hints.descriptions.length > 1" @click="hintHandler" data-direction="backward">
+          &#60;
+        </div>
         <div class="display">{{ hints.current + 1 }}/{{ hints.descriptions.length }}</div>
-        <div class="forward" v-if="hints.descriptions.length > 1" @click="hintHandler" data-direction="forward">&#62;</div>
+        <div class="forward" v-if="hints.descriptions.length > 1" @click="hintHandler" data-direction="forward">&#62;
+        </div>
       </div>
       <p v-html="hints.descriptions[hints.current]"></p>
     </div>
@@ -25,7 +28,7 @@ export default {
 
     const hints = computed(() => {
       const hints: { active: boolean; current: number; descriptions: Array<string> } = getProperty(
-        `nodes__${currentNode}__hints`
+        `nodes__${currentNode}__hints`,
       );
       if (!hints) return { active: false, current: 0, descriptions: [] };
       return hints;
@@ -78,16 +81,16 @@ export default {
       lightBulbSource,
       lightSwitch,
       hintHandler,
-      closeHandler
+      closeHandler,
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
 .hint {
   position: absolute;
-  right: 30px;
+  right: 80px;
   top: 15px;
   z-index: 6;
   display: flex;
@@ -190,14 +193,17 @@ export default {
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 /* Track */
 ::-webkit-scrollbar-track {
   background: #888;
 }
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #57636b;
 }
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
