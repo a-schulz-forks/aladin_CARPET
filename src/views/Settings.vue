@@ -7,7 +7,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import {computed, ref, watch} from "vue";
+import {useGamifyStore} from "@/stores/gamify";
+
+const gamifyStore = useGamifyStore();
+
 const labelPaths = ref(false);
 watch(() => labelPaths.value, (value) => {
   gamifyStore.modalActive = value;

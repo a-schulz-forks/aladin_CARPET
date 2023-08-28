@@ -26,7 +26,7 @@ import DecisionNode from "@/components/DecisionNode.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import BaseModal from "@/components/base/BaseModal.vue";
 import {useGamifyStore} from '@/stores/gamify'
-import GamificationLabeller from "@/components/GamificationLabeller.vue";
+import GamificationLabeller from "@/components/gamification/GamificationLabeller.vue";
 
 const taskStore = stores.taskStore;
 const {store, getProperty, setProperty} = taskStore;
