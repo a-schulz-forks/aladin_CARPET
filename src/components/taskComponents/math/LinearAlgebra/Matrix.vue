@@ -13,12 +13,12 @@
         </th>
         <td class="matrix_element" v-for="(element, j) in userData[i]" :key="j">
           <MatrixField
-            :rowIndex="i"
-            :columnIndex="j"
-            :storeObject="storeObject"
-            :componentID="id"
-            :isReadOnly="isReadOnly"
-            :element="element"
+              :rowIndex="i"
+              :columnIndex="j"
+              :storeObject="storeObject"
+              :componentID="id"
+              :isReadOnly="isReadOnly"
+              :element="element"
           />
         </td>
       </tr>
@@ -27,31 +27,22 @@
 </template>
 
 <script lang="ts">
-import { onMounted, computed, watch } from "vue";
-import { Matrix } from "@/helpers/LinearAlgebra";
+import {onMounted, computed, watch} from "vue";
+import {Matrix} from "@/helpers/LinearAlgebra";
 import MatrixField from "@/components/taskComponents/math/LinearAlgebra/MatrixField.vue";
-import type { IMatrixComponent, IMatrixInstruction } from "@/interfaces/componentInterfaces/MatrixInterface";
+import type {IMatrixComponent, IMatrixInstruction} from "@/interfaces/componentInterfaces/MatrixInterface";
 import ContextMenu from "@/components/taskComponents/mixins/ContextMenu.vue";
 import type {IMethodsDefinition} from "@/interfaces/TaskGraphInterface";
 import {getSelectedMethods} from "@/helpers/getSelectedMethods";
 
-/**
- * multiply the score for this component with these values e.g. showSolution -> score * 0 = 0
- */
-export const impactMethodsToScore = {
-  "fillZeros": 0.5,
-  "showSolution": 0,
-  "copyToClipboard": 1,
-};
-
 export default {
-  props: { componentID: Number, storeObject: Object },
+  props: {componentID: Number, storeObject: Object},
   components: {
     ContextMenu,
     MatrixField
   },
   setup(props) {
-    const { store, getProperty, setProperty } = props.storeObject;
+    const {store, getProperty, setProperty} = props.storeObject;
     const currentNode = computed(() => store.state.currentNode);
     const componentPath = `nodes__${currentNode.value}__components__${props.componentID}__component`;
 
@@ -86,7 +77,7 @@ export default {
         }
 
         const strip = (v: string) => JSON.parse(JSON.stringify(v));
-        const { paths, operations } = instructions;
+        const {paths, operations} = instructions;
 
         let delay = false;
         const matrices = paths.reduce((matrices: { [key: string]: any }, path: string) => {
@@ -112,7 +103,7 @@ export default {
         // result is initialized as the matrix with the first path
         // otherwise result is set by the result of the previous operation
         let resultMatrix = operations.reduce((result: any, operation: string) => {
-          const { name: operationName, args } = JSON.parse(JSON.stringify(operation));
+          const {name: operationName, args} = JSON.parse(JSON.stringify(operation));
           if (args.includes("chain")) {
             let matrix = result;
             for (let j = 1; j < paths.length; j++) {
@@ -128,7 +119,7 @@ export default {
         if (resultMatrix === undefined) {
           resultMatrix = new Matrix(...[[]]);
         }
-        setProperty({ path: `${componentPath}__${name}Data`, value: resultMatrix.getRows() });
+        setProperty({path: `${componentPath}__${name}Data`, value: resultMatrix.getRows()});
       });
     };
 
@@ -141,14 +132,14 @@ export default {
     });
 
     watch(
-      dependencies,
-      async () => {
-        initialize(instructions);
-        if (props.componentID == 3) {
-          console.log("DEPENDENCY UPDATE", props.componentID, dependencies.value);
-        }
-      },
-      { deep: true }
+        dependencies,
+        async () => {
+          initialize(instructions);
+          if (props.componentID == 3) {
+            console.log("DEPENDENCY UPDATE", props.componentID, dependencies.value);
+          }
+        },
+        {deep: true}
     );
 
     const loadData = (path) => {
@@ -160,14 +151,14 @@ export default {
     };
 
     const validateMatrix = () => {
-      const validity = { isValid: true, isCorrect: true };
+      const validity = {isValid: true, isCorrect: true};
       if (isReadOnly) return validity;
 
       let earlyStop = false;
       for (const column of validationData.value) {
         if (earlyStop) break;
         for (const elementValidity of column) {
-          const { isValid, isCorrect } = elementValidity;
+          const {isValid, isCorrect} = elementValidity;
 
           if (isCorrect === false) {
             validity.isCorrect = isCorrect;
@@ -185,7 +176,7 @@ export default {
 
     // TODO: figure out why all validationData isValid-fields are being set to true, even if only one MatrixField is being manipulated
     const validateMatrixHacked = () => {
-      const validity = { isValid: true, isCorrect: true };
+      const validity = {isValid: true, isCorrect: true};
       if (isReadOnly) return validity;
 
       let earlyStop = false;
@@ -231,19 +222,19 @@ export default {
 
     // TODO: delete, once above TODO is solved
     watch(
-      userData,
-      () => {
-        const { isValid, isCorrect } = validateMatrixHacked();
-        setProperty({
-          path: `nodes__${currentNode.value}__components__${props.componentID}__isValid`,
-          value: isValid
-        });
-        setProperty({
-          path: `nodes__${currentNode.value}__components__${props.componentID}__isCorrect`,
-          value: isCorrect
-        });
-      },
-      { deep: true }
+        userData,
+        () => {
+          const {isValid, isCorrect} = validateMatrixHacked();
+          setProperty({
+            path: `nodes__${currentNode.value}__components__${props.componentID}__isValid`,
+            value: isValid
+          });
+          setProperty({
+            path: `nodes__${currentNode.value}__components__${props.componentID}__isCorrect`,
+            value: isCorrect
+          });
+        },
+        {deep: true}
     );
 
     const methods = {
@@ -251,18 +242,18 @@ export default {
         const solution = JSON.parse(JSON.stringify(getProperty(`${componentPath}__solutionData`)));
         const userData = JSON.parse(JSON.stringify(getProperty(`${componentPath}__userData`)));
         solution.forEach((row, i) =>
-          row.map((value, j) => {
-            if (value === 0) setProperty({ path: `${componentPath}__userData__${i}__${j}`, value });
-            else setProperty({ path: `${componentPath}__userData__${i}__${j}`, value: userData[i][j] });
-          })
+            row.map((value, j) => {
+              if (value === 0) setProperty({path: `${componentPath}__userData__${i}__${j}`, value});
+              else setProperty({path: `${componentPath}__userData__${i}__${j}`, value: userData[i][j]});
+            })
         );
       },
       showSolution: () => {
         const solution = JSON.parse(JSON.stringify(getProperty(`${componentPath}__solutionData`)));
         solution.forEach((row, i) =>
-          row.map((value, j) => {
-            setProperty({ path: `${componentPath}__userData__${i}__${j}`, value });
-          })
+            row.map((value, j) => {
+              setProperty({path: `${componentPath}__userData__${i}__${j}`, value});
+            })
         );
       },
       copyToClipboard: () => {

@@ -4,31 +4,31 @@
     <div class="parameter_form_columns">
       <div class="parameter_labels">
         <p
-          v-for="(element, key) in elements"
-          :key="key"
-          v-html="element.label"
-          v-tooltip.left-center="element.description || ''"
+            v-for="(element, key) in elements"
+            :key="key"
+            v-html="element.label"
+            v-tooltip.left-center="element.description || ''"
         />
       </div>
       <div class="parameter_fields">
         <component
-          @updateElement="updateElement"
-          :is="element.formType"
-          v-for="(element, key) in elements"
-          :key="key"
-          :element="element"
-          :elementId="key"
-          :storeObject="storeObject"
-          :componentID="componentID"
+            @updateElement="updateElement"
+            :is="element.formType"
+            v-for="(element, key) in elements"
+            :key="key"
+            :element="element"
+            :elementId="key"
+            :storeObject="storeObject"
+            :componentID="componentID"
         />
       </div>
     </div>
-    <ActionButtons :actions="actions" :actionTypes="actionTypes" />
+    <ActionButtons :actions="actions" :actionTypes="actionTypes"/>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, watch, ref } from "vue";
+import {computed, watch, ref} from "vue";
 import RangeFormField from "@/components/taskComponents/form/RangeFormField.vue";
 import DropdownFormField from "@/components/taskComponents/form/DropdownFormField.vue";
 import CheckboxFormField from "@/components/taskComponents/form/CheckboxFormField.vue";
@@ -50,29 +50,34 @@ export default {
     ActionButtons,
   },
   setup(props) {
-    const { store, getProperty, setProperty } = props.storeObject;
+    const {store, getProperty, setProperty} = props.storeObject as {
+      store: any;
+      getProperty: Function;
+      setProperty: Function;
+    };
+
     const currentNode = store.state.currentNode;
     const path = `nodes__${currentNode}__components__${props.componentID}`;
 
     const taskData = computed(() => getProperty(`taskData`));
     watch(
-      taskData,
-      (newTaskData) => {
-        if (Object.keys(newTaskData).length) setProperty({ path: `${path}__isValid`, value: true });
-      },
-      { deep: true }
+        taskData,
+        (newTaskData) => {
+          if (Object.keys(newTaskData).length) setProperty({path: `${path}__isValid`, value: true});
+        },
+        {deep: true}
     );
 
     const title = getProperty(`${path}__component__title`);
 
     const elements = computed(() => getProperty(`${path}__component__form`));
 
-    const updateElement = (event) => {
-      const { classList, value, type, checked } = event.target;
+    const updateElement = (event: Event) => {
+      const {classList, value, type, checked} = <HTMLFormElement>event.target;
       const className = classList[0];
       const payload = type === "checkbox" ? checked : value;
       const elementPath = `${path}__component__form__${className}`;
-      setProperty({ path: elementPath, value: payload });
+      setProperty({path: elementPath, value: payload});
       updateActions();
     };
 
@@ -91,20 +96,19 @@ export default {
 
     const preparePayload = (instruction) => {
       const parameters: { [key: string]: any } = Object.entries(elements.value).reduce(
-        (parameters, [name, parameter]: [string, { [key: string]: any }]) => {
-          const { formType, initial } = parameter;
-          let payload = { ...parameters, [name]: initial };
-          if (formType === "RangeFormField") payload[name] = [initial.lowerValue, initial.upperValue];
-          if (formType === "ValueFormField") payload[name] = parameter.value;
-          return payload;
-        },
-        {}
+          (parameters, [name, parameter]: [string, { [key: string]: any }]) => {
+            const {formType, initial} = parameter;
+            let payload = {...parameters, [name]: initial};
+            if (formType === "RangeFormField") payload[name] = [initial.lowerValue, initial.upperValue];
+            if (formType === "ValueFormField") payload[name] = parameter.value;
+            return payload;
+          },
+          {}
       );
-      const payload: { [key: string]: any } = { parameters };
+      const payload: { [key: string]: any } = {parameters};
       payload.type = currentTask.value;
       payload.task = currentTask.value;
       payload.instruction = instruction;
-      console.log(payload)
       return payload;
     };
 
@@ -112,15 +116,15 @@ export default {
 
     const fetchData = (instruction) => {
       const preparedPayload = preparePayload(instruction);
-      store.dispatch("fetchTaskData", { payload: preparedPayload, endpoint: `${currentTask.value}/${instruction}` });
-      setProperty({ path: `taskParameters`, value: preparedPayload});
+      store.dispatch("fetchTaskData", {payload: preparedPayload, endpoint: `${currentTask.value}/${instruction}`});
+      setProperty({path: `taskParameters`, value: preparedPayload});
     };
 
     const actionTypes = {
       fetchData,
     };
 
-    return { elements, updateElement, actions, actionTypes, title };
+    return {elements, updateElement, actions, actionTypes, title};
   },
 };
 </script>

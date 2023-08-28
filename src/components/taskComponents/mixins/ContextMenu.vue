@@ -20,11 +20,13 @@ export default {
 
     const closeContextMenu = () => {
       const contextMenu = document.querySelector(".contextMenu.open");
-      if (contextMenu) contextMenu.classList.remove("open");
-      setProperty({
-        path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__isOpen`,
-        value: false
-      });
+      if (contextMenu) {
+        contextMenu.classList.remove("open");
+        setProperty({
+          path: `nodes__${currentNode}__components__${props.componentId}__contextMenu__isOpen`,
+          value: false
+        });
+      }
     };
     const openContextMenu = () => {
       // const parent = event.path.filter((n) => /vue-grid-item/.test(n.className))[0];

@@ -2,43 +2,37 @@
   <div class="dotGraph" :id="`graph_${componentID}`"></div>
 </template>
 
-<script lang="ts">
-import { onMounted, computed, watch } from "vue";
-import { graphviz } from "d3-graphviz";
+<script lang="ts" setup>
+import {onMounted, computed, watch} from "vue";
+import {graphviz} from "d3-graphviz";
+import type {ComponentProps} from "@/interfaces/ComponentInterface";
 
-export default {
-  props: {
-    componentID: Number,
-    storeObject: Object
-  },
-  setup(props) {
-    const { store, getProperty } = props.storeObject;
-    const currentNode = computed(() => store.state.currentNode);
-    const path = `nodes__${currentNode.value}__components__${props.componentID}`;
+const props = defineProps<ComponentProps>();
 
-    const dependencies = getProperty(`${path}__dependencies`);
-    const dotDescription = computed(() => {
-      const dotDescription = getProperty(dependencies.DOTGraph.dotDescription);
-      if (!dotDescription) return "";
-      return dotDescription;
-    });
+const {store, getProperty} = props.storeObject;
+const currentNode = computed(() => store.state.currentNode);
+const path = `nodes__${currentNode.value}__components__${props.componentID}`;
 
-    const renderGraph = (description) => {
-      graphviz(`#graph_${props.componentID}`, {
-        fit: true,
-        zoom: false,
-        useWorker: false
-      }).renderDot(description);
-    };
-    watch(dotDescription, () => {
-      renderGraph(dotDescription.value);
-    });
-    onMounted(() => {
-      renderGraph(dotDescription.value);
-    });
-    return {};
-  }
+const dependencies = getProperty(`${path}__dependencies`);
+const dotDescription = computed(() => {
+  const dotDescription = getProperty(dependencies.DOTGraph.dotDescription);
+  if (!dotDescription) return "";
+  return dotDescription;
+});
+
+const renderGraph = (description: string) => {
+  graphviz(`#graph_${props.componentID}`, {
+    fit: true,
+    zoom: false,
+    useWorker: false
+  }).renderDot(description);
 };
+watch(dotDescription, () => {
+  renderGraph(dotDescription.value);
+});
+onMounted(() => {
+  renderGraph(dotDescription.value);
+});
 </script>
 
 <style>
