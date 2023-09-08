@@ -7,8 +7,10 @@ import {
   SkillsConfiguration,
   SkillsDisplayJS,
 } from "@skilltree/skills-client-js/dist/skills-client-js.esm.min.js";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import * as bootstrap from "bootstrap";
+import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
+import { definition, IDistinctionItem, ISkillsMapping } from "./data/definition";
 
 const props = defineProps({
   modalId: {
@@ -17,12 +19,39 @@ const props = defineProps({
   },
 });
 
+const clientDisplay = new SkillsDisplayJS({
+  options: {
+    internalBackButton: "true",
+  },
+});
+
 onMounted(() => {
   SkillsConfiguration.afterConfigure().then(() => {
-    const clientDisplay = new SkillsDisplayJS();
+    // https://skilltreeplatform.dev/skills-client/js.html#skills-display
     clientDisplay.attachTo(document.querySelector("#skills-client-container"));
   });
 });
+
+const route = useRoute();
+
+watch(
+  route,
+  (to: RouteLocationNormalizedLoaded) => {
+    const path = to.path;
+    if (!/^\/task\/.*/.test(path)) return;
+    const routeSegments = path.split("/");
+    const task = routeSegments[routeSegments.length - 1];
+    // eslint-disable-next-line no-prototype-builtins
+    if (!definition.hasOwnProperty(task)) return;
+    const skillsDisplaySubject = definition[task]["skillsDisplaySubject"];
+    if (!skillsDisplaySubject) return;
+    setNavigation(skillsDisplaySubject);
+  },
+);
+
+const setNavigation = (subject: string) => {
+  clientDisplay.navigate("/subjects/" + subject);
+};
 </script>
 
 <template>
