@@ -1,11 +1,11 @@
 export interface ISkillsMapping {
   [key: string]:
-    | { value: any, skillId?: string }
+    | { value: any, skillIds?: string[] }
     | { value: any, distinction?: IDistinctionItem[] };
 }
 
 export interface IDistinctionItem {
-  skillId: string;
+  skillIds: string[];
 
   [key: string]: any;
 }
@@ -23,22 +23,22 @@ export const definition: IGamificationDefinition = {
     "skillsMapping": {
       "nodes__0__components__1__isValid": {
         "value": true,
-        "skillId": "AufgabeParametrisierenSkill",
+        "skillIds": ["AufgabeParametrisierenSkill"],
       },
       "nodes__6__components__0__isValid": {
         "value": true,
-        "skillId": "AdjazenzmatrixAblesenSkill",
+        "skillIds": ["AdjazenzmatrixAblesenSkill"],
       },
       "nodes__7__components__(\\d+)__isValid": {
         "value": true,
         "distinction": [
           {
-            "skillId": "GesamtbedarfsmatrixBestimmenSkill",
+            "skillIds": ["GesamtbedarfsmatrixBestimmenSkill"],
             "component": { "readOnly": false },
             "name": "Gesamtbedarfsmatrix",
           },
           {
-            "skillId": "DirektbedarfsmatrixMultiplizierenSkill",
+            "skillIds": ["MatrixMultiplikationSkill", "DirektbedarfsmatrixMultiplizierenSkill"],
             "component": { "readOnly": false },
             "name": "Direktbedarfsmatrix",
           },
@@ -46,7 +46,7 @@ export const definition: IGamificationDefinition = {
       },
       "nodes__7__components__3__isValid": {
         "value": true,
-        "skillId": "SekundaerbedarfsvektorBestimmenSkill",
+        "skillIds": ["SekundaerbedarfsvektorBestimmenSkill"],
       },
     },
   },
@@ -55,15 +55,15 @@ export const definition: IGamificationDefinition = {
     "skillsMapping": {
       "nodes__0__components__0__isValid": {
         "value": true,
-        "skillId": "AufgabeParametrisierenSkill",
+        "skillIds": ["AufgabeParametrisierenSkill"],
       },
       "nodes__2__components__0__isValid": {
         "value": true,
-        "skillId": "MetraPotentialMethodeSkill",
+        "skillIds": ["MetraPotentialMethodeSkill"],
       },
       "nodes__3__components__0__isValid": {
         "value": true,
-        "skillId": "ZeitanalyseDurchfuehrenSkill",
+        "skillIds": ["ZeitanalyseDurchfuehrenSkill"],
       },
     },
   },

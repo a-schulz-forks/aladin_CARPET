@@ -4,15 +4,14 @@ import { SkillsConfiguration, SkillsReporter } from "@skilltree/skills-client-js
 import { taskStore } from "@/store/taskGraph";
 import { useGamifyStore } from "@/stores/gamify";
 
-const getSkillId = (step: IStep, skillsMapping: ISkillsMapping): string | null => {
+const getSkillIds = (step: IStep, skillsMapping: ISkillsMapping): string[] => {
   // check for a direct mapping
   const mapping = skillsMapping[step.path];
-  // eslint-disable-next-line no-prototype-builtins
-  if (mapping && mapping.hasOwnProperty("skillId")) {
+  if (mapping && "skillIds" in mapping) {
     // @ts-ignore
-    const skillId = mapping["skillId"];
-    if (skillId && mapping["value"] == step.value) return skillId;
-    return null;
+    const skillIds = mapping["skillIds"];
+    if (skillIds && skillIds.length != 0 && mapping["value"] == step.value) return skillIds;
+    return [];
   }
   // handle distinction
   const keys = Object.keys(skillsMapping);
@@ -24,23 +23,23 @@ const getSkillId = (step: IStep, skillsMapping: ISkillsMapping): string | null =
     const distinction = skillsMapping[key]["distinction"];
     if (distinction && skillsMapping[key]["value"] == step.value) {
       const component = getComponent(step.path);
-      if (!component) return null;
+      if (!component) return [];
 
       for (const item of distinction) {
         if (matchesDistinction(component, item)) {
-          return item["skillId"];
+          return item["skillIds"];
         }
       }
     }
   }
-  return null;
+  return [];
 };
 
 const matchesDistinction = (component: any, distinction: IDistinctionItem): boolean => {
   const distinctionEntries = Object.entries(distinction);
 
   for (const [key, value] of distinctionEntries) {
-    if (key === "skillId") continue;
+    if (key === "skillIds") continue;
 
     if (typeof value === "object") {
       // If the value is an object, it's a nested distinction condition
@@ -97,20 +96,22 @@ export const submitSkill = async (step: IStep, currentTask: string) => {
   if (!currentTask) return;
   if (!SkillsConfiguration.isInitialized()) return;
   const gamifyStore = useGamifyStore();
-  const skillId = getSkillId(step, definition[currentTask]["skillsMapping"]);
-  if (!skillId) return;
+  const skillIds = getSkillIds(step, definition[currentTask]["skillsMapping"]);
+  if (skillIds.length == 0) return;
   if (gamifyStore.computedPaths.includes(step.path)) return;
   const methods = getMethods(getComponent(step.path));
   // Report to method skill with less points if the impact is higher than 0.5
-  if (methods) {
-    const impact = getHighestImpactOfMethods(methods);
-    if (impact >= 0.5 && await skillIdExists(skillId.replace("Skill", "WithMethodsSkill"))) {
-      SkillsReporter.reportSkill(skillId.replace("Skill", "WithMethodsSkill"));
+  skillIds.forEach(async (skillId) => {
+    if (methods) {
+      const impact = getHighestImpactOfMethods(methods);
+      if (impact >= 0.5 && await skillIdExists(skillId.replace("Skill", "WithMethodsSkill"))) {
+        SkillsReporter.reportSkill(skillId.replace("Skill", "WithMethodsSkill"));
+      }
+    } else {
+      SkillsReporter.reportSkill(skillId);
     }
-  } else {
-    SkillsReporter.reportSkill(skillId);
-  }
-  gamifyStore.computedPaths.push(step.path);
-  console.log("SKILL SUBMITTED", skillId);
+    gamifyStore.computedPaths.push(step.path);
+    console.log("SKILL SUBMITTED", skillId);
+  });
   return;
 };
