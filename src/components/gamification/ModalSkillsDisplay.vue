@@ -11,6 +11,7 @@ import { onMounted, watch } from "vue";
 import * as bootstrap from "bootstrap";
 import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
 import { definition, IDistinctionItem, ISkillsMapping } from "./data/definition";
+import { SkillsReporter } from "@skilltree/skills-client-js/dist/skills-client-js.esm.min";
 
 const props = defineProps({
   modalId: {
@@ -29,6 +30,12 @@ onMounted(() => {
   SkillsConfiguration.afterConfigure().then(() => {
     // https://skilltreeplatform.dev/skills-client/js.html#skills-display
     clientDisplay.attachTo(document.querySelector("#skills-client-container"));
+    // reload iframe on skill report
+    SkillsReporter.configure({ notifyIfSkillNotApplied: true });
+    SkillsReporter.addSuccessHandler((result) => {
+      clientDisplay.destroy();
+      clientDisplay.attachTo(document.querySelector("#skills-client-container"));
+    });
   });
 });
 
