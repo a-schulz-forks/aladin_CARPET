@@ -1,12 +1,9 @@
 <script lang="ts" setup>
 import {
-  SkillsConfiguration,
-  SkillsDisplayJS,
-  SkillsLevelJS,
   SkillsReporter,
 } from "@skilltree/skills-client-js/dist/skills-client-js.esm.min.js";
-import {onMounted, ref} from "vue";
-import * as bootstrap from 'bootstrap'
+import { onMounted, ref } from "vue";
+import * as bootstrap from "bootstrap";
 
 // Feedback for the user
 const toastHeader = ref("Beim nächsten Mal!");
@@ -15,7 +12,7 @@ const toastSuccess = ref(false);
 
 onMounted(() => {
   // Define feedback for the user
-  SkillsReporter.configure({notifyIfSkillNotApplied: true});
+  SkillsReporter.configure({ notifyIfSkillNotApplied: true });
   SkillsReporter.addSuccessHandler((result) => {
     toastHeader.value = "Diesmal leider nicht!";
     toastSuccess.value = false;
@@ -28,8 +25,8 @@ onMounted(() => {
     }
     toastBootstrap.show();
   });
-  const toastLiveExample = document.getElementById('liveToast')
-  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+  const toastLiveExample = document.getElementById("liveToast");
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
 });
 </script>
 
