@@ -58,11 +58,11 @@ export const definition: IGamificationDefinition =
           "value": true,
           "skillIds": ["AufgabeParametrisierenSkill"],
         },
-        "nodes__2__components__0__isCorrect": {
+        "nodes__2__components__0__isValid": {
           "value": true,
           "skillIds": ["MetraPotentialMethodeSkill"],
         },
-        "nodes__3__components__0__isCorrect": {
+        "nodes__3__components__0__isValid": {
           "value": true,
           "skillIds": ["ZeitanalyseDurchfuehrenSkill"],
         },
